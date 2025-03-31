@@ -1,0 +1,39 @@
+version: "3"
+
+tasks:
+  setup:
+    desc: Install frontend and backend dependencies
+    cmds:
+      - task: install:client
+      - task: install:server
+
+  install:client:
+    desc: npm install inside ClientApp/
+    dir: ClientApp
+    cmds:
+      - npm install
+
+  install:server:
+    desc: dotnet restore inside WebApi/
+    dir: WebApi
+    cmds:
+      - dotnet restore
+
+  frontend:
+    desc: Run Angular frontend (watch mode)
+    dir: ClientApp
+    cmds:
+      - npm run start
+
+  backend:
+    desc: Run .NET backend (watch mode)
+    dir: WebApi
+    cmds:
+      - dotnet watch run
+
+  dev:
+    desc: Run frontend and backend concurrently
+    cmds:
+      - |
+        task backend &
+        task frontend

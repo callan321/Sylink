@@ -21,33 +21,50 @@ _A collaboration-first space for writing, planning, and hanging out with friends
 
 ---
 
-## 🧱 Project Architecture
+## Project Requirements (Dev Machine)
 
-`Sylink` is a full-stack, real-time collaboration platform built with:
+To run Sylink locally (pre-Docker), install the following global tools:
 
-- **.NET Core Web API** – Backend powered by ASP.NET Core, using Identity for auth and SignalR for real-time messaging.
-- **Angular SPA** – A structured, modular frontend with route-based features and JWT-based auth.
-- **PostgreSQL** – Primary relational database managed via EF Core.
-- **Docker** – Used for local and staging environments, including DB containerization.
-- **Python scripting** – Developer automation (e.g. `setup.py`).
+- [Node.js v22.14.0 (LTS)](https://nodejs.org/en/download)
+- [Angular CLI v19.2.5](https://www.npmjs.com/package/@angular/cli) — `npm install -g @angular/cli`
+- [.NET SDK v8.0.100](https://dotnet.microsoft.com/en-us/download)
+- [Docker Desktop v4.35.2](https://www.docker.com/products/docker-desktop/)
+- [Taskfile CLI v3.34.1](https://taskfile.dev/#/installation) — `scoop install task` or `brew install go-task`
 
-### 📁 Folder Structure
+> ℹThese global dependencies are only required for local development.
+> Once full Docker setup is in place, all tooling will be containerized.
 
-The backend and frontend are fully decoupled but integrated via REST and SignalR. Development is designed to be container-first, with tooling for one-line setup via Python and shell scripts.
+## Project Architecture
+
+**Sylink** is a full-stack, real-time collaboration platform built with a modular, container-ready architecture optimized for team collaboration and feature isolation.
+
+### Core Technologies
+
+- **.NET 9 Web API** — Backend built with ASP.NET Core, using Identity for auth and SignalR for real-time messaging
+- **Angular 19 SPA** — Frontend built with Angular standalone components and feature-based routing
+- **PostgreSQL** — Relational database powered by EF Core and managed via Docker
+- **Docker + Compose** — Used for local and staging environments, including containerized Postgres and backend
+- **Taskfile CLI** — Cross-platform dev automation (setup, dev, deploy tasks)
 
 ---
 
+### Project Folder Structure
+
+The backend and frontend are fully decoupled but integrated via REST APIs and SignalR. The monorepo is structured for scalability, and all services are orchestrated via `Taskfile` and Docker.
+
 ```
 sylink/
-├── WebApi/              → .NET backend
 ├── ClientApp/           → Angular frontend
-├── Docker/              → Dockerfiles, Compose configs
-├── Scripts/             → Python setup scripts
-├── setup.py             → Entry point for automated setup
+├── WebApi/              → .NET 8 backend
+├── Docker/              → Dockerfiles
+├── Taskfile.yml         → Project automation
+├── .gitignore
 ├── LICENSE
-├──
-└── README.md            → Main project roadmap + architecture
+└── README.md            → Project roadmap + architecture
+
 ```
+
+---
 
 ## ⚠️ Implementation Notes
 
@@ -84,7 +101,7 @@ Even as the sole contributor for now, treat it as a reference point for in-progr
 
 ### Phase 3: Frontend Skeleton (ClientApp)
 
-- [ ] Initialize Angular project
+- [x] Initialize Angular project
 - [ ] Link to backend (auth flows)
 - [ ] Auth guards + routing
 - [ ] Homepage/dashboard
