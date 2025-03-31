@@ -1,12 +1,13 @@
 # Sylink
 
-*A collaboration-first space for writing, planning, and hanging out with friends.*
+_A collaboration-first space for writing, planning, and hanging out with friends._
 
 ---
 
 ## 📚 Table of Contents
 
-- [📁 Folder Structure](#-folder-structure)
+- [🧱 Project Architecture](#-project-architecture)
+- [⚠️ Implementation Notes](#️-implementation-notes)
 - [Phase 1: Auth Backend](#phase-1-auth-backend)
 - [Phase 2: Postgres + EF Core](#phase-2-postgres--ef-core)
 - [Phase 3: Frontend Skeleton (ClientApp)](#phase-3-frontend-skeleton-clientapp)
@@ -20,29 +21,52 @@
 
 ---
 
-## 📁 Folder Structure
+## 🧱 Project Architecture
+
+`Sylink` is a full-stack, real-time collaboration platform built with:
+
+- **.NET Core Web API** – Backend powered by ASP.NET Core, using Identity for auth and SignalR for real-time messaging.
+- **Angular SPA** – A structured, modular frontend with route-based features and JWT-based auth.
+- **PostgreSQL** – Primary relational database managed via EF Core.
+- **Docker** – Used for local and staging environments, including DB containerization.
+- **Python scripting** – Developer automation (e.g. `setup.py`).
+
+### 📁 Folder Structure
+
+The backend and frontend are fully decoupled but integrated via REST and SignalR. Development is designed to be container-first, with tooling for one-line setup via Python and shell scripts.
+
+---
 
 ```
 sylink/
-├── WebApi/              → .NET backend (API, SignalR)
+├── WebApi/              → .NET backend
 ├── ClientApp/           → Angular frontend
-├── Docker/              → Dockerfiles, Compose (Postgres only)
-├── Scripts/             → Dev scripts (e.g. dev.sh, setup.sh)
-├── .env.dev             → Local config
-└── README.md
+├── Docker/              → Dockerfiles, Compose configs
+├── Scripts/             → Python setup scripts
+├── setup.py             → Entry point for automated setup
+├── LICENSE
+├──
+└── README.md            → Main project roadmap + architecture
 ```
+
+## ⚠️ Implementation Notes
+
+Be sure to read the [`WebApi/README.md`](WebApi/README.md) — it contains important implementation details, warnings, and backend-specific todos.
+
+Even as the sole contributor for now, treat it as a reference point for in-progress logic, things to revisit, and lower-level architectural decisions.
 
 ---
 
 ### Phase 1: Auth Backend
 
-- [ ] Setup .NET WebApi project
-- [ ] Register / login / logout endpoints
-- [ ] JWT auth
-- [ ] Email verification
-- [ ] Password reset (token-based)
-- [ ] Token refresh endpoint
-- [ ] Display name reservation
+- [x] Setup .NET WebApi project
+- [x] Register / login / logout endpoints
+- [x] JWT auth
+- [x] Email verification
+- [x] Password reset (token-based)
+- [x] Token refresh endpoint
+- [ ] Add auth middleware
+- [ ] Implement email confirmed auth logic
 - [ ] Background job: remove unverified accounts
 
 ---
@@ -76,6 +100,7 @@ sylink/
 #### 4.1 Servers & Channels
 
 **Requirements**
+
 - [ ] Server creation, joining, leaving
 - [ ] Server invites (token/direct)
 - [ ] Server creator as admin
@@ -83,6 +108,7 @@ sylink/
 - [ ] Server member list
 
 **Wants**
+
 - [ ] Custom roles & permissions (owner-defined)
 - [ ] App integrations (notes, calendar)
 - [ ] Voice + video chat
@@ -93,6 +119,7 @@ sylink/
 #### 4.2 Messaging
 
 **Requirements**
+
 - [ ] Send messages in channels
 - [ ] Channel message history
 - [ ] Real-time updates (SignalR)
@@ -100,6 +127,7 @@ sylink/
 - [ ] Show user (even if deleted)
 
 **Wants**
+
 - [ ] Group DMs
 - [ ] Reactions, edits, deletions
 - [ ] Typing indicators
@@ -110,11 +138,13 @@ sylink/
 #### 4.3 Notes
 
 **Requirements**
+
 - [ ] Private notes
 - [ ] Markdown content
 - [ ] Read/edit views
 
 **Wants**
+
 - [ ] Live collaborative editing (Google Docs-style)
 - [ ] Shared notes via invite
 - [ ] Auto-save + real-time updates
@@ -127,12 +157,14 @@ sylink/
 #### 4.4 Calendar & Schedule
 
 **Requirements**
+
 - [ ] Weekly recurring schedule per user
 - [ ] One-off weekly overrides
 - [ ] Notes per calendar day
 - [ ] Checklist/todo per day
 
 **Wants**
+
 - [ ] Google Calendar sync
 - [ ] Server-level shared calendars
 - [ ] RSVP/reminders

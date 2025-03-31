@@ -1,0 +1,41 @@
+########################################
+# .NET Core / ASP.NET Core
+########################################
+## Build Folders
+bin/
+obj/
+out/
+
+## Entity Framework
+Migrations
+
+## Secrets / Configs 
+# ⚠️ WARNING: Uncomment before going to production if these contain secrets.
+# Ignore these if they store sensitive values like API keys or connection strings.
+# appsettings.Development.json
+# appsettings.Local.json
+# secrets.json
+
+########################################
+# Visual Studio
+########################################
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+########################################
+# VS Code
+########################################
+.vscode/
+.history/
+.code-workspace
+
+########################################
+# WebStorm / JetBrains IDEs
+########################################
+.idea/
+*.iml
+*.iws
+*.ipr
