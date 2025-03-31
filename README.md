@@ -52,6 +52,7 @@ sylink/
 ## ⚠️ Implementation Notes
 
 Be sure to read the [`WebApi/README.md`](WebApi/README.md) — it contains important implementation details, warnings, and backend-specific todos.
+Also read the [`ClientApp/README.md`](ClientApp/README.md) — it contains angular specific todos.
 
 Even as the sole contributor for now, treat it as a reference point for in-progress logic, things to revisit, and lower-level architectural decisions.
 

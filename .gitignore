@@ -1,41 +1,79 @@
-########################################
-# .NET Core / ASP.NET Core
-########################################
-## Build Folders
-bin/
-obj/
-out/
+# ==============================
+# Angular / ClientApp
+# ==============================
+ClientApp/dist/
+ClientApp/.angular/
+ClientApp/.tsbuildinfo
+ClientApp/node_modules/
+ClientApp/tmp/
+ClientApp/out-tsc/
+ClientApp/bazel-out/
+ClientApp/coverage/
+ClientApp/libpeerconnection.log
 
-## Entity Framework
-Migrations
+# ==============================
+# Node logs (global)
+# ==============================
+npm-debug.log*
+yarn-error.log*
 
-## Secrets / Configs 
-# ⚠️ WARNING: Uncomment before going to production if these contain secrets.
-# Ignore these if they store sensitive values like API keys or connection strings.
-# appsettings.Development.json
-# appsettings.Local.json
-# secrets.json
+# ==============================
+# TypeScript / Misc (ClientApp)
+# ==============================
+ClientApp/typings/
+ClientApp/.sass-cache/
 
-########################################
+# ==============================
+# .NET / WebApi
+# ==============================
+WebApi/bin/
+WebApi/obj/
+WebApi/out/
+WebApi/Migrations/
+
+# Optional config/secrets (uncomment before production)
+# WebApi/appsettings.Development.json
+# WebApi/appsettings.Local.json
+# WebApi/secrets.json
+
+# ==============================
+# Docker
+# ==============================
+Docker/.docker/
+Docker/.dockerignore
+
+# ==============================
+# Python / Scripts
+# ==============================
+Scripts/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ==============================
+# Editor Artifacts
+# ==============================
+
+# VS Code
+.vscode/
+.history/
+.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
 # Visual Studio
-########################################
 .vs/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
-########################################
-# VS Code
-########################################
-.vscode/
-.history/
-.code-workspace
-
-########################################
-# WebStorm / JetBrains IDEs
-########################################
-.idea/
-*.iml
-*.iws
-*.ipr
+# ==============================
+# System Files
+# ==============================
+.DS_Store
+Thumbs.db
