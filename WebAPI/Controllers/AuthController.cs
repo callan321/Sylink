@@ -62,27 +62,59 @@ namespace WebAPI.Controllers
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
-                return Ok(new AuthResponseDto
+                return BadRequest(new ErrorResponseDto
                 {
-                    AccessToken = _jwtService.GenerateJwtToken(user),
-                    RefreshToken = refreshToken.Token,
-                    TokenExpiry = refreshToken.ExpiryDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                    Message = "Invalid Email or Password"
                 });
             }
 
-            return BadRequest(new ErrorResponseDto
+            var accessToken = _jwtService.GenerateJwtToken(user);
+            var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
+
+            // Set access token as HttpOnly cookie
+            Response.Cookies.Append("access_token", accessToken, new CookieOptions
             {
-                Message = "Invalid Email or Password"
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(15),
+                Path = "/"
+            });
+
+            // Set refresh token as HttpOnly cookie
+            Response.Cookies.Append("refresh_token", refreshToken.Token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = refreshToken.ExpiryDate,
+                Path = "/"
+            });
+
+            return Ok(new AuthResponseDto
+            {
+                Message = "Login successful",
+                TokenExpiry = refreshToken.ExpiryDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
             });
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenDto model)
+        public async Task<IActionResult> RefreshToken()
         {
-            var (isValid, userId) = await _jwtService.ValidateRefreshToken(model.RefreshToken);
+            // Read refresh token from HttpOnly cookie
+            var refreshToken = Request.Cookies["refresh_token"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return BadRequest(new ErrorResponseDto
+                {
+                    Message = "Refresh token missing"
+                });
+            }
+
+            // Validate refresh token
+            var (isValid, userId) = await _jwtService.ValidateRefreshToken(refreshToken);
             if (!isValid || userId == null)
             {
                 return BadRequest(new ErrorResponseDto
@@ -96,20 +128,43 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(new ErrorResponseDto
                 {
-                    Message = "Invalid Refresh Token"
+                    Message = "User not found"
                 });
             }
 
-            await _jwtService.RevokeRefreshToken(model.RefreshToken);
-            var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
-            return Ok(new AuthResponseDto
+            // Revoke old and generate new refresh token
+            await _jwtService.RevokeRefreshToken(refreshToken);
+            var newRefreshToken = await _jwtService.GenerateRefreshToken(user.Id);
+            var newAccessToken = _jwtService.GenerateJwtToken(user);
+
+            // Set new access token cookie
+            Response.Cookies.Append("access_token", newAccessToken, new CookieOptions
             {
-                AccessToken = _jwtService.GenerateJwtToken(user),
-                RefreshToken = refreshToken.Token,
-                TokenExpiry = refreshToken.ExpiryDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(15),
+                Path = "/"
             });
 
+            // Set new refresh token cookie
+            Response.Cookies.Append("refresh_token", newRefreshToken.Token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = newRefreshToken.ExpiryDate,
+                Path = "/"
+            });
+
+            // Return expiry timestamp for frontend timer
+            return Ok(new AuthResponseDto
+            {
+                Message = "Token refreshed successfully",
+                TokenExpiry = newRefreshToken.ExpiryDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
+            });
         }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
