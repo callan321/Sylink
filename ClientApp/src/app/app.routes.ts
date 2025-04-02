@@ -1,38 +1,14 @@
-import {RouterModule, Routes} from '@angular/router';
-import {MainLayoutComponent} from './layout/main-layout/main-layout.component';
-import {NgModule} from '@angular/core';
+import { Routes } from '@angular/router';
+import {authRoutes} from './features/auth/auth.routes';
+
 
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () =>
-      import('./landing/routes').then(m => m.default),
+    loadComponent : () => import('./features/onboarding/landing-page/landing-page.component').then(m => m.LandingPageComponent) ,
   },
   {
-    path: 'dashboard',
-    component: MainLayoutComponent,
-    loadChildren: () =>
-      import('./dashboard/routes').then(m => m.default),
-  },
-  {
-    path: 'server',
-    component: MainLayoutComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () =>
-          import('./server/routes').then(m => m.default),
-      },
-    ],
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  },
+    path : 'auth',
+    loadChildren: () =>  import('./features/auth/auth.routes').then(r => authRoutes)
+  }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}
