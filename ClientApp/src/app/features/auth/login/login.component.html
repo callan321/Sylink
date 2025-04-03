@@ -36,7 +36,9 @@
         />
 
         <div class="text-sm/6">
-          <a href="#" class="button-text">Forgot password?</a>
+          <a [routerLink]="['/auth/forgot-password']" class="button-text"
+            >Forgot password?</a
+          >
         </div>
       </div>
 
@@ -52,7 +54,7 @@
 
     <p class="mt-10 text-center text-sm/6 text-gray-500">
       Don't have an account?
-      <a href="/auth/register" class="button-text">Register Here</a>
+      <a [routerLink]="['/auth/register']" class="button-text">Register Here</a>
     </p>
   </div>
 </div>
