@@ -80,7 +80,7 @@ The backend and frontend are fully decoupled but integrated via REST APIs and Si
 ```
 sylink/
 ├── ClientApp/           → Angular frontend
-├── WebApi/              → .NET 8 backend
+├── WebApi/              → .NET backend
 ├── Docker/              → Dockerfiles
 ├── Taskfile.yml         → Project automation
 ├── .gitignore
@@ -93,12 +93,13 @@ sylink/
 
 ## ⚠️ Implementation Notes
 
-Be sure to read the [`WebApi/README.md`](WebApi/README.md) — it contains important implementation details, warnings, and backend-specific todos.
-Also read the [`ClientApp/README.md`](ClientApp/README.md) — it contains angular specific todos.
+This project is currently running with relaxed development settings:
 
-Even as the sole contributor for now, treat it as a reference point for in-progress logic, things to revisit, and lower-level architectural decisions.
-
----
+- Weak password requirements
+- A simple, insecure JWT secret (do not use in production)
+- Refresh tokens are not yet implemented
+- Email confirmation is not enforced
+- Authentication middleware is not fully configured for production
 
 ### Phase 1: Auth Backend
 
@@ -109,30 +110,28 @@ Even as the sole contributor for now, treat it as a reference point for in-progr
 - [x] Password reset (token-based)
 - [x] Token refresh endpoint
 - [ ] Add auth middleware
-- [ ] Implement email confirmed auth logic
-- [ ] Background job: remove unverified accounts
+- [x] Implement email confirmed auth logic
+- [ ] Require email confirmation before allowing login - magic links
+- [ ] Implement Oauth
 
 ---
 
-### Phase 2: Postgres + EF Core
-
-- [ ] Add `docker-compose.dev.yml` with Postgres
-- [ ] Switch to EF Core + Npgsql
-- [ ] Migrations + dev DB seeding
-- [ ] Replace in-memory structures
-- [ ] Begin integration tests
-
----
-
-### Phase 3: Frontend Skeleton (ClientApp)
+### Phase 2: Frontend Skeleton (ClientApp)
 
 - [x] Initialize Angular project
 - [ ] Link to backend (auth flows)
 - [ ] Auth guards + routing
 - [ ] Homepage/dashboard
 - [ ] Profile editor
-- [ ] Feature route stubs (`/servers`, `/messages`, `/notes`, `/calendar`)
-- [ ] `setup.sh` script for bootstrapping project
+
+---
+
+### Phase 3: Postgres + EF Core
+
+- [ ] Add `docker-compose.dev.yml` with Postgres
+- [ ] Switch to EF Core + Npgsql
+- [ ] Migrations + dev DB seeding
+- [ ] Replace in-memory structures
 
 ---
 
@@ -216,20 +215,50 @@ Even as the sole contributor for now, treat it as a reference point for in-progr
 
 ---
 
-### Phase 5: Staging Environment
+### Phase 5: Prestaging requirements
+
+**Requirements**
+
+- [ ] Enforce a stronger password policy via `IdentityOptions`
+- [ ] Lock down CORS policy for known environments
+- [ ] Rotate and secure JWT secret via environment config
+- [ ] Add background task runner
+- [ ] Purge unconfirmed users after X days
+- [ ] Clean up expired email/password tokens
+- [ ] Revoke old refresh tokens
+- [ ] Add audit logging for auth events
+- [ ] Rate limit auth endpoints
+
+**Wants**
+
+- [ ] PWA setup
+- [ ] Track email bounces
+- [ ] Cleanup orphaned data
+
+### Phase 6: Testing plan
+
+tba ...
+
+- [ ] Unit tests - backend services
+- [ ] Integration tests - auth flow, db interactions
+- [ ] Frontend component testing - form validation, guards, services
+- [ ] E2E tests - Playwright
+
+### Phase 7: Staging Environment
 
 - [ ] Dockerize backend for deploy
 - [ ] Add staging config
 - [ ] Deploy to EC2
 - [ ] Connect AWS SES for email
 - [ ] Basic logging/error tracking
+- [ ] Review and lock down CORS, HTTPS, and auth middleware
+- [ ] Replace the JWT secret with a secure, environment-based key
+- [ ] Setup CI/CD pipeline with github actions
 
 ---
 
-### Phase 6: Production Readiness
+### Phase 8: Production Readiness
 
-- [ ] Optimize DB schema
 - [ ] Mobile responsiveness
 - [ ] UI polish
-- [ ] Optional PWA setup
 - [ ] Final docs & README polish
