@@ -2,53 +2,43 @@
   <div class="form-card">
     <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div>
-        <label for="email" class="form-label">Email address</label>
-        <div class="mt-2">
-          <input
-            type="email"
-            formControlName="email"
-            id="email"
-            autocomplete="email"
-            required
-            class="form-input"
-          />
-        </div>
+        <app-form-input-group
+          id="email"
+          label="Email address"
+          type="email"
+          autocomplete="email"
+          required
+        />
       </div>
       <div>
-        <label for="password" class="form-label">Password</label>
-        <div class="mt-2">
-          <input
-            type="password"
-            formControlName="password"
-            id="password"
-            autocomplete="current-password"
-            required
-            class="form-input"
-          />
-        </div>
+        <app-form-input-group
+          id="password"
+          label="Password"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
       </div>
-
       <div>
-        <label for="displayName" class="form-label">Display Name</label>
-        <div class="mt-2">
-          <input
-            type="text"
-            formControlName="displayName"
-            id="displayName"
-            required
-            class="form-input"
-          />
-        </div>
+        <app-form-input-group
+          id="displayName"
+          label="Display Name"
+          type="text"
+          required
+        />
       </div>
-
       <button type="submit" class="button-primary">Register</button>
     </form>
+
     <app-text-divider label="Or register with" />
-    <div>
-      <div class="mt-6 grid grid-cols-2 gap-4">
-        <app-auth-button provider="google" href="#" label="Google" />
-        <app-auth-button href="#" provider="github" label="Github" />
-      </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-4">
+      <app-auth-button provider="google" href="#" label="Google" />
+      <app-auth-button provider="github" href="#" label="Github" />
     </div>
+    <p class="mt-10 text-center text-sm/6 text-gray-500">
+      Already have an account?
+      <a [routerLink]="['/auth/login']" class="button-text">Login Here</a>
+    </p>
   </div>
 </div>

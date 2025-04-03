@@ -1,55 +1,45 @@
 <div class="fullscreen-center">
   <div class="form-card">
-    <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div>
-        <label for="email" class="form-label">Email address</label>
-        <div class="mt-2">
-          <input
-            type="email"
-            formControlName="email"
-            id="email"
-            autocomplete="email"
-            required
-            class="form-input"
-          />
-        </div>
+        <app-form-input-group
+          id="email"
+          label="Email address"
+          type="email"
+          autocomplete="email"
+          required
+        />
       </div>
       <div>
-        <label for="password" class="form-label">Password</label>
-        <div class="mt-2">
-          <input
-            type="password"
-            formControlName="password"
-            id="password"
-            autocomplete="current-password"
-            required
-            class="form-input"
-          />
-        </div>
+        <app-form-input-group
+          id="password"
+          label="Password"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
       </div>
-
       <div class="flex items-center justify-between">
         <app-form-checkbox
           id="remember-me"
           label="Remember Me"
           name="remember-me"
         />
-
         <div class="text-sm/6">
-          <a [routerLink]="['/auth/forgot-password']" class="button-text"
-            >Forgot password?</a
-          >
+          <a [routerLink]="['/auth/forgot-password']" class="button-text">
+            Forgot password?
+          </a>
         </div>
       </div>
 
       <button type="submit" class="button-primary">Sign in</button>
     </form>
+
     <app-text-divider label="Or continue with" />
-    <div>
-      <div class="mt-6 grid grid-cols-2 gap-4">
-        <app-auth-button provider="google" href="#" label="Google" />
-        <app-auth-button href="#" provider="github" label="Github" />
-      </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-4">
+      <app-auth-button provider="google" href="#" label="Google" />
+      <app-auth-button provider="github" href="#" label="Github" />
     </div>
 
     <p class="mt-10 text-center text-sm/6 text-gray-500">

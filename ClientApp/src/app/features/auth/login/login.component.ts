@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { Router, RouterLink } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     RouterLink,
+    FormInputGroupComponent,
   ],
   templateUrl: './login.component.html',
   standalone: true,

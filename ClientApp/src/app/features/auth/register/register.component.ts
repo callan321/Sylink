@@ -8,11 +8,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 
 @Component({
   selector: 'app-register',
-  imports: [TextDividerComponent, AuthButtonComponent, ReactiveFormsModule],
+  imports: [
+    TextDividerComponent,
+    AuthButtonComponent,
+    ReactiveFormsModule,
+    FormInputGroupComponent,
+    RouterLink,
+  ],
   templateUrl: './register.component.html',
   standalone: true,
   styleUrl: './register.component.scss',
