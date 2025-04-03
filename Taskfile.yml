@@ -42,10 +42,6 @@ tasks:
       - dotnet watch run
 
   dev:
-    desc: Run frontend and backend concurrently (auto-gen certs)
-    deps:
-      - generate:cert
+    desc: Run frontend and backend concurrently
     cmds:
-      - |
-        task backend &
-        task frontend
+      - task -p backend frontend
