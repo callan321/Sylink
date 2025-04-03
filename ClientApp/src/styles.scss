@@ -1,17 +1,4 @@
-@use "tailwindcss";
-
-html,
-body {
-  height: 100%;
-  width: 100%;
-}
-
-body {
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+@import 'tailwindcss';
 
 .form-label {
   @apply block text-sm/6 font-medium text-gray-900;
