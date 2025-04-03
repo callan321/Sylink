@@ -23,15 +23,40 @@ _A collaboration-first space for writing, planning, and hanging out with friends
 
 ## Project Requirements (Dev Machine)
 
-To run Sylink locally (pre-Docker), install the following global tools:
+To run **Sylink** locally (pre-Docker), install the following global tools:
 
-- [Node.js v22.14.0 (LTS)](https://nodejs.org/en/download)
-- [Angular CLI v19.2.5](https://www.npmjs.com/package/@angular/cli) — `npm install -g @angular/cli`
-- [.NET SDK v8.0.100](https://dotnet.microsoft.com/en-us/download)
-- [Docker Desktop v4.35.2](https://www.docker.com/products/docker-desktop/)
-- [Taskfile CLI v3.34.1](https://taskfile.dev/#/installation) — `scoop install task` or `brew install go-task`
+### 🔧 Global Dependencies
 
-> ℹThese global dependencies are only required for local development.
+| Tool                                                              | Version  | Install Command                                                      |
+| ----------------------------------------------------------------- | -------- | -------------------------------------------------------------------- |
+| [Node.js](https://nodejs.org/en/download)                         | `v22.x`  | —                                                                    |
+| [Angular CLI](https://www.npmjs.com/package/@angular/cli)         | `v19.x`  | `npm install -g @angular/cli`                                        |
+| [.NET SDK](https://dotnet.microsoft.com/en-us/download)           | `v9.x`   | —                                                                    |
+| [Docker Desktop](https://www.docker.com/products/docker-desktop/) | `v4.x+`  | \_\_                                                                 |
+| [Taskfile CLI](https://taskfile.dev/#/installation)               | `v3.x`   | `scoop install task` _(Windows)_ or `brew install go-task` _(macOS)_ |
+| [OpenSSL](https://slproweb.com/products/Win32OpenSSL.html)        | `>= 3.x` | \_\_                                                                 |
+
+---
+
+### 🔐 Local HTTPS Dev (Angular)
+
+To support local development over **HTTPS**:
+
+- A self-signed SSL cert is auto-generated and stored in:
+
+  ```
+  ClientApp/ssl/localhost.crt
+  ClientApp/ssl/localhost.key
+  ```
+
+- This happens automatically as part of:
+  ```
+  task setup
+  ```
+
+---
+
+> ℹ These global dependencies are only required for local development.  
 > Once full Docker setup is in place, all tooling will be containerized.
 
 ## Project Architecture

@@ -2,8 +2,9 @@ version: "3"
 
 tasks:
   setup:
-    desc: Install frontend and backend dependencies
+    desc: Install frontend and backend dependencies + generate SSL cert
     cmds:
+      - task: generate:cert
       - task: install:client
       - task: install:server
 
@@ -19,6 +20,15 @@ tasks:
     cmds:
       - dotnet restore
 
+  generate:cert:
+    desc: Generate localhost SSL certificate
+    dir: ClientApp/ssl
+    status:
+      - test -f localhost.crt
+      - test -f localhost.key
+    cmds:
+      - openssl req -x509 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -days 365 -nodes -subj "/CN=localhost"
+
   frontend:
     desc: Run Angular frontend (watch mode)
     dir: ClientApp
@@ -32,7 +42,9 @@ tasks:
       - dotnet watch run
 
   dev:
-    desc: Run frontend and backend concurrently
+    desc: Run frontend and backend concurrently (auto-gen certs)
+    deps:
+      - generate:cert
     cmds:
       - |
         task backend &
