@@ -25,11 +25,11 @@ import { FormInputGroupComponent } from '@shared/components/form-input-group/for
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  registerForm: FormGroup = this.fb.group({
+  registerForm: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
     password: ['', Validators.required],
     displayName: ['', Validators.required],

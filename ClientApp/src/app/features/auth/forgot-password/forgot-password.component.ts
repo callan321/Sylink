@@ -23,11 +23,10 @@ import { TextDividerComponent } from '@shared/components/text-divider/text-divid
   styleUrl: './forgot-password.component.scss',
 })
 export class ForgotPasswordComponent {
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
 
-  forgotPasswordForm: FormGroup = this.fb.group({
+  forgotPasswordForm: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
   });
   onSubmit() {

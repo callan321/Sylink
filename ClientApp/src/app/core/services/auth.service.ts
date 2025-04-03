@@ -18,6 +18,12 @@ export interface ForgotPasswordPayload {
   email: string;
 }
 
+export interface ResetPasswordPayload {
+  email: string;
+  token: string;
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,28 +31,35 @@ export class AuthService {
   private registerUrl = `${environment.apiUrl}/Auth/register`;
   private loginUrl = `${environment.apiUrl}/Auth/login`;
   private forgotPasswordUrl = `${environment.apiUrl}/Auth/forgot-password`;
-  private ForgotPasswordPayload: any;
+  private resetPasswordUrl = `${environment.apiUrl}/Auth/reset-password`;
 
   constructor(private http: HttpClient) {}
 
-  register(user: RegisterPayload): Observable<any> {
+  register(payload: RegisterPayload): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.registerUrl, user, {
+    return this.http.post(this.registerUrl, payload, {
       headers,
     });
   }
 
-  login(user: LoginPayload): Observable<any> {
+  login(payload: LoginPayload): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.loginUrl, user, {
+    return this.http.post(this.loginUrl, payload, {
       headers,
       withCredentials: true,
     });
   }
 
-  forgotPassword(user: ForgotPasswordPayload): Observable<any> {
+  forgotPassword(payload: ForgotPasswordPayload): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.forgotPasswordUrl, user, {
+    return this.http.post(this.forgotPasswordUrl, payload, {
+      headers,
+    });
+  }
+
+  resetPassword(payload: ResetPasswordPayload): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(this.resetPasswordUrl, payload, {
       headers,
     });
   }

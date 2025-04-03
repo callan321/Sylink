@@ -29,11 +29,11 @@ import { FormInputGroupComponent } from '@shared/components/form-input-group/for
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  loginForm: FormGroup = this.fb.group({
+  loginForm: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
     password: ['', Validators.required],
   });
