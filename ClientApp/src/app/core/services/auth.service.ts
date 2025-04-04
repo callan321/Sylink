@@ -14,6 +14,11 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface ConfirmEmailPayload {
+  email: string;
+  token: string;
+}
+
 export interface ForgotPasswordPayload {
   email: string;
 }
@@ -30,6 +35,7 @@ export interface ResetPasswordPayload {
 export class AuthService {
   private registerUrl = `${environment.apiUrl}/Auth/register`;
   private loginUrl = `${environment.apiUrl}/Auth/login`;
+  private confirmEmailUrl = `${environment.apiUrl}/Auth/verify-email`;
   private forgotPasswordUrl = `${environment.apiUrl}/Auth/forgot-password`;
   private resetPasswordUrl = `${environment.apiUrl}/Auth/reset-password`;
 
@@ -48,6 +54,11 @@ export class AuthService {
       headers,
       withCredentials: true,
     });
+  }
+
+  confirmEmail(payload: ConfirmEmailPayload): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(this.confirmEmailUrl, payload, { headers });
   }
 
   forgotPassword(payload: ForgotPasswordPayload): Observable<any> {
