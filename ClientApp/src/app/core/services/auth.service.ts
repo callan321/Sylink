@@ -35,7 +35,7 @@ export interface ResetPasswordPayload {
 export class AuthService {
   private registerUrl = `${environment.apiUrl}/Auth/register`;
   private loginUrl = `${environment.apiUrl}/Auth/login`;
-  private confirmEmailUrl = `${environment.apiUrl}/Auth/verify-email`;
+  private confirmEmailUrl = `${environment.apiUrl}/Auth/confirm-email`;
   private forgotPasswordUrl = `${environment.apiUrl}/Auth/forgot-password`;
   private resetPasswordUrl = `${environment.apiUrl}/Auth/reset-password`;
 

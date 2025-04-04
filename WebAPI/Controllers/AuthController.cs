@@ -189,7 +189,7 @@ namespace WebAPI.Controllers
             });
         }
 
-        [HttpPost("verify-email")]
+        [HttpPost("confirm-email")]
         public async Task<IActionResult> VerifyEmail(VerifyEmailDto model)
         {
             // Check if user exists
