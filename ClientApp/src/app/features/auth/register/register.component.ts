@@ -42,7 +42,9 @@ export class RegisterComponent {
         next: (result) => {
           console.log(result);
           this.router
-            .navigate(['/auth/login'])
+            .navigate(['/auth/email-sent'], {
+              queryParams: { email: payload.email },
+            })
             .then((result) => console.log(result));
         },
         error: (errors) => console.log(errors),
