@@ -52,6 +52,7 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto model)
         {
+            // Check if user exists
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
@@ -61,6 +62,16 @@ namespace WebAPI.Controllers
                 });
             }
 
+            // Check if email is confirmed
+            if (!user.EmailConfirmed)
+            {
+                return BadRequest(new ErrorResponseDto
+                {
+                    Message = "Email not confirmed"
+                });
+            }
+
+            // Check password
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (!result.Succeeded)
             {
@@ -70,6 +81,7 @@ namespace WebAPI.Controllers
                 });
             }
 
+            // Generate JWT and Refresh Token
             var accessToken = _jwtService.GenerateJwtToken(user);
             var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
 
@@ -123,6 +135,7 @@ namespace WebAPI.Controllers
                 });
             }
 
+            // Find user by ID
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -179,6 +192,7 @@ namespace WebAPI.Controllers
         [HttpPost("verify-email")]
         public async Task<IActionResult> VerifyEmail(VerifyEmailDto model)
         {
+            // Check if user exists
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
@@ -187,6 +201,7 @@ namespace WebAPI.Controllers
                     Message = "Invalid Email or User not found"
                 });
             }
+            // Check if email is already confirmed
             var result = await _userManager.ConfirmEmailAsync(user, model.Token);
             if (result.Succeeded)
             {
