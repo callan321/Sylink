@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebAPI.Application.Contracts;
+namespace WebAPI.Application.Contracts.Auth;
 
 public class RegisterRequest
 {

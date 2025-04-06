@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using WebAPI.Application.Contracts;
+using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
 using WebAPI.Application.Interfaces.Services;
 

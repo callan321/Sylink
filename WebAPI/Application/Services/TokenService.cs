@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using WebAPI.Application.Contracts;
+using System.Security.Claims;
+using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
@@ -53,4 +54,18 @@ public class TokenService(
         _cookieService.RemoveToken(response, "access_token");
         _cookieService.RemoveToken(response, "refresh_token");
     }
+
+    public async Task<(bool IsValid, ClaimsPrincipal? Principal)> VerifyAccessTokenAsync(HttpRequest request, HttpResponse response)
+    {
+        var (isValid, principal) = await _jwtService.ValidateAccessTokenAsync(request);
+
+        if (!isValid || principal == null)
+        {
+            response.Cookies.Delete("access_token");
+            return (false, null);
+        }
+
+        return (true, principal);
+    }
+
 }

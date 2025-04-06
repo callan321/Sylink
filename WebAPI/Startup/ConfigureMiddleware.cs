@@ -1,4 +1,7 @@
-﻿namespace WebAPI.Startup;
+﻿
+using WebAPI.Api.Middleware;
+
+namespace WebAPI.Startup;
 
 public static class ConfigureMiddleware
 {
@@ -7,7 +10,7 @@ public static class ConfigureMiddleware
     /// </summary>
     public static IApplicationBuilder UseCustomMiddleware(this IApplicationBuilder app)
     {
-        // add something here
+        app.UseMiddleware<AuthMiddleware>();
         return app;
     }
 }

@@ -49,11 +49,6 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
         return refreshToken;
     }
 
-    public (bool IsValid, string? UserId) ValidateRefreshToken(string token)
-    {
-        throw new NotImplementedException("This method is not implemented yet.");
-    }
-
     public Task DeleteRefreshToken(string token)
     {
         return _refreshTokens.DeleteAsync(token);
@@ -72,6 +67,52 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
         return (true, refreshToken.UserId);
     }
 
+    public Task<(bool IsValid, ClaimsPrincipal? Principal)> ValidateAccessTokenAsync(HttpRequest request)
+    {
+        // Get the access token from the request cookies
+        var token = request.Cookies["access_token"];
+        if (string.IsNullOrWhiteSpace(token))
+            return Task.FromResult<(bool, ClaimsPrincipal?)>((false, null));
+
+        // Create a JWT token handler
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        // Define the token validation parameters
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = GetSecurityKey(),
+
+            ValidateIssuer = true,
+            ValidIssuer = _config["JwtSettings:Issuer"],
+
+            ValidateAudience = true,
+            ValidAudience = _config["JwtSettings:Audience"],
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        try
+        {
+            // Validate the token and get the claims principal
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out var _);
+
+            // Check if the required user ID claim is present
+            var hasUserId = principal.FindFirst(ClaimTypes.NameIdentifier) != null;
+
+            // Return result based on presence of user ID claim
+            return Task.FromResult<(bool, ClaimsPrincipal?)>(hasUserId
+                ? (true, principal)
+                : (false, null));
+        }
+        catch
+        {
+            // Token validation failed
+            return Task.FromResult<(bool, ClaimsPrincipal?)>((false, null));
+        }
+    }
+
     // -----------------------
     // Private Helpers
     // -----------------------
@@ -80,10 +121,9 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
     {
         return
         [
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? string.Empty),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-            new Claim("DisplayName", user.DisplayName ?? string.Empty)
+            new Claim(ClaimTypes.NameIdentifier, user.Id)
         ];
     }
 
@@ -118,6 +158,5 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
         rng.GetBytes(bytes);
         return Convert.ToBase64String(bytes);
     }
-
 
 }

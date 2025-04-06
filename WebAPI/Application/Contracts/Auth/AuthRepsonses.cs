@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.Contracts
+﻿namespace WebAPI.Application.Contracts.Auth
 {
     public class AuthResponse
     {

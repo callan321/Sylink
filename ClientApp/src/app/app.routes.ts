@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authRoutes } from '@features/auth/auth.routes';
+import { profileRoutes } from '@features/profile/profile.routes';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,11 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () =>
       import('./features/auth/auth.routes').then((r) => authRoutes),
+  },
+  {
+    path: 'profile',
+    loadChildren: () =>
+      import('./features/profile/profile.routes').then((r) => profileRoutes),
   },
   {
     path: '**',

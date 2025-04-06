@@ -8,6 +8,7 @@ public class OperationResult<T>
     public List<FieldError>? Errors { get; set; }
     public string? ErrorCode { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public bool IsSuccess { get; internal set; }
 
     public static OperationResult<T> Ok(T data, string message = "Success") =>
         new() { Success = true, Data = data, Message = message };

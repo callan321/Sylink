@@ -1,4 +1,4 @@
-﻿using WebAPI.Application.Contracts;
+﻿using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
 
 

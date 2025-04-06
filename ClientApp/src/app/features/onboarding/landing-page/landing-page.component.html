@@ -12,16 +12,11 @@
         productivity and creativity.
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">
+        <a [routerLink]="['/profile']" class="button-primary">Profile</a>
         <a [routerLink]="['/auth/login']" class="button-primary">Log In</a>
         <a [routerLink]="['/auth/register']" class="button-text"
           >Register <span aria-hidden="true">→</span></a
         >
-        <button class="button-primary" type="button" (click)="logout()">
-          Logout
-        </button>
-        <button class="button-primary" type="button" (click)="refresh()">
-          Refresh Token
-        </button>
       </div>
     </div>
   </div>
