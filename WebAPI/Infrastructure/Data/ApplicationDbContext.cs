@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Models;
+using WebAPI.Domain.Entities;
 
-namespace WebAPI.Data
+namespace WebAPI.Infrastructure.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
@@ -11,15 +11,7 @@ namespace WebAPI.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Confiuer relationships
-            builder.Entity<RefreshToken>(entity =>
-            {
-                entity.HasOne(e => e.User)
-                      .WithMany(u => u.RefreshTokens)
-                      .HasForeignKey(e => e.UserId)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
     }
 }

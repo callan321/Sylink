@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebAPI.Models
+namespace WebAPI.Domain.Entities
 {
     [Index(nameof(DisplayName), IsUnique = true)]
     public class ApplicationUser : IdentityUser

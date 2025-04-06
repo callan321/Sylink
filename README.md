@@ -6,7 +6,7 @@ _A collaboration-first space for writing, planning, and hanging out with friends
 
 ## 📚 Table of Contents
 
-- [🧱 Project Architecture](#-project-architecture)
+- [ Project Architecture](#-project-architecture)
 - [⚠️ Implementation Notes](#️-implementation-notes)
 - [Phase 1: Auth Backend](#phase-1-auth-backend)
 - [Phase 2: Postgres + EF Core](#phase-2-postgres--ef-core)
@@ -100,6 +100,76 @@ This project is currently running with relaxed development settings:
 - Refresh tokens are not yet implemented
 - Email confirmation is not enforced
 - Authentication middleware is not fully configured for production
+
+# WebAPI Backend – Onion Architecture
+
+This project is a modular .NET Core Web API built with long-term maintainability and real-world deployment in mind.  
+It follows a Onion Architecture with a pragmatic setup suitable for solo or small team development.
+
+---
+
+## Architecture Overview
+
+The app is split into clear layers, each with its own responsibility. This makes it easier to test, swap infrastructure, and avoid spaghetti code over time.
+
+### `Api/` – Presentation Layer
+
+- Contains controllers and middleware
+- Responsible for handling HTTP requests and responses
+- Should not contain any business logic
+
+### `Application/` – Use Cases & Business Logic
+
+- Contains services, interfaces, request/response models, and validation
+- Coordinates business processes and workflows
+- Doesn’t know or care about infrastructure
+
+### `Domain/` – Core Models
+
+- Just plain C# classes`
+- No external dependencies
+- Represents business rules and structures
+
+### `Infrastructure/` – Implementations
+
+- Connects to real systems: EF Core, JWT, email, etc.
+- Implements the interfaces defined in `Application/`
+- Swappable and mockable
+
+### `Startup/` – App Composition
+
+- Wires everything together
+- Registers services and middleware
+- Keeps `Program.cs` minimal and focused
+
+---
+
+## Why This Structure?
+
+- Clear separation of responsibilities
+- Business logic can be tested without hitting the database
+- Easy to swap out infrastructure pieces (e.g. replace JWT system)
+- Scales well as new features are added
+- Works great with SPAs using secure cookie-based JWT auth
+
+This setup aims to balance **structure and flexibility** — especially helpful when working alone but building for the long term.
+
+## Why Not Identity `[Authorize]`?
+
+This app uses **cookie-based JWT authentication** designed for SPA clients (e.g., Angular):
+
+- **Access Token**: Short-lived, stored in an `HttpOnly` cookie
+- **Refresh Token**: Stored separately, tied to DB entries, and allows token renewal
+
+Because this app uses custom refresh tokens and a stateless JWT flow, Identity's built-in auth pipeline doesn't directly apply. Instead:
+
+- Middleware handles JWT validation
+- Manual claims extraction enables custom context
+- Refresh token validation is done in `AuthService`
+
+This gives full control over auth mechanics while keeping things simple.
+
+---
 
 ### Phase 1: Auth Backend
 
