@@ -33,45 +33,70 @@ export interface ResetPasswordPayload {
   providedIn: 'root',
 })
 export class AuthService {
-  private registerUrl = `${environment.apiUrl}/Auth/register`;
-  private loginUrl = `${environment.apiUrl}/Auth/login`;
-  private confirmEmailUrl = `${environment.apiUrl}/Auth/confirm-email`;
-  private forgotPasswordUrl = `${environment.apiUrl}/Auth/forgot-password`;
-  private resetPasswordUrl = `${environment.apiUrl}/Auth/reset-password`;
+  private readonly jsonHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
+
+  private readonly registerUrl = `${environment.apiUrl}/Auth/register`;
+  private readonly loginUrl = `${environment.apiUrl}/Auth/login`;
+  private readonly confirmEmailUrl = `${environment.apiUrl}/Auth/confirm-email`;
+  private readonly forgotPasswordUrl = `${environment.apiUrl}/Auth/forgot-password`;
+  private readonly resetPasswordUrl = `${environment.apiUrl}/Auth/reset-password`;
+  private readonly logoutUrl = `${environment.apiUrl}/Auth/logout`;
+  private readonly refreshUrl = `${environment.apiUrl}/Auth/refresh-token`;
 
   constructor(private http: HttpClient) {}
 
   register(payload: RegisterPayload): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(this.registerUrl, payload, {
-      headers,
+      headers: this.jsonHeaders,
     });
   }
 
   login(payload: LoginPayload): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(this.loginUrl, payload, {
-      headers,
+      headers: this.jsonHeaders,
       withCredentials: true,
     });
   }
 
   confirmEmail(payload: ConfirmEmailPayload): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.confirmEmailUrl, payload, { headers });
+    return this.http.post(this.confirmEmailUrl, payload, {
+      headers: this.jsonHeaders,
+    });
   }
 
   forgotPassword(payload: ForgotPasswordPayload): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(this.forgotPasswordUrl, payload, {
-      headers,
+      headers: this.jsonHeaders,
     });
   }
 
   resetPassword(payload: ResetPasswordPayload): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(this.resetPasswordUrl, payload, {
-      headers,
+      headers: this.jsonHeaders,
     });
+  }
+
+  logout(): Observable<any> {
+    return this.http.post(
+      this.logoutUrl,
+      {},
+      {
+        headers: this.jsonHeaders,
+        withCredentials: true,
+      },
+    );
+  }
+
+  refresh(): Observable<any> {
+    return this.http.post(
+      this.refreshUrl,
+      {},
+      {
+        headers: this.jsonHeaders,
+        withCredentials: true,
+      },
+    );
   }
 }
