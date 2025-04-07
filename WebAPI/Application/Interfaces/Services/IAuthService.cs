@@ -1,5 +1,6 @@
-﻿using WebAPI.Application.Contracts.Auth;
-using WebAPI.Application.Contracts.Common;
+﻿using WebAPI.Application.Contracts.Common;
+using WebAPI.Application.Contracts.Requests;
+using WebAPI.Application.Contracts.Responses;
 
 
 namespace WebAPI.Application.Interfaces.Services;
@@ -12,5 +13,4 @@ public interface IAuthService
     Task<OperationResult<object>> ConfirmEmailAsync(VerifyEmailRequest request);
     Task<OperationResult<object>> ForgotPasswordAsync(ForgotPasswordRequest request);
     Task<OperationResult<object>> ResetPasswordAsync(ResetPasswordRequest request);
-    Task<OperationResult<AuthResponse>> RefreshTokenAsync(HttpRequest request, HttpResponse response);
 }

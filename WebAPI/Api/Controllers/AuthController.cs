@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAPI.Application.Contracts.Auth;
+using WebAPI.Application.Contracts.Requests;
 using WebAPI.Application.Interfaces.Services;
 
 namespace WebAPI.Api.Controllers;

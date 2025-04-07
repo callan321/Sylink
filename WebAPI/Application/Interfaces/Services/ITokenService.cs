@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
-using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
+using WebAPI.Application.Contracts.Responses;
 using WebAPI.Domain.Entities;
 
 namespace WebAPI.Application.Interfaces.Services;

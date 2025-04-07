@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
-using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
 using WebAPI.Application.Contracts.Dtos;
+using WebAPI.Application.Contracts.Responses;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
 
@@ -35,25 +35,6 @@ public class TokenService(
             TokenExpiry = accessToken.Expiry
         }, message);
     }
-
-    public async Task<OperationResult<AuthResponse>> RefreshAsync(HttpRequest request, HttpResponse response)
-    {
-        var token = _cookieService.GetRefreshToken(request);
-        if (string.IsNullOrWhiteSpace(token))
-            return OperationResult<AuthResponse>.Fail("Refresh token is missing");
-
-        var (isValid, userId) = await _jwtService.ValidateRefreshTokenAsync(token);
-        if (!isValid || userId is null)
-            return OperationResult<AuthResponse>.Fail("Invalid or expired refresh token");
-
-        var user = await _identityService.GetUserByIdAsync(userId);
-        if (user is null)
-            return OperationResult<AuthResponse>.Fail("User not found");
-
-        await _jwtService.DeleteRefreshToken(token);
-        return await GenerateAndSetTokensAsync(user, response, "Token refreshed");
-    }
-
     public void ClearTokens(HttpResponse response)
     {
         _cookieService.RemoveAccessToken(response);
@@ -75,20 +56,20 @@ public class TokenService(
 
     public async Task<ClaimsPrincipal?> TryRefreshAsync(HttpRequest request, HttpResponse response)
     {
-        var refreshToken = _cookieService.GetRefreshToken(request);
-        if (string.IsNullOrWhiteSpace(refreshToken))
+        var refreshTokenString = _cookieService.GetRefreshToken(request);
+        if (string.IsNullOrWhiteSpace(refreshTokenString))
             return null;
 
-        var (isValid, userId) = await _jwtService.ValidateRefreshTokenAsync(refreshToken);
-        if (!isValid || userId is null)
+        var refreshToken = await _jwtService.ValidateRefreshTokenAsync(refreshTokenString);
+        if (refreshToken == null)
             return null;
 
-        var user = await _identityService.GetUserByIdAsync(userId);
+        var user = await _identityService.GetUserByIdAsync(refreshToken.UserId);
         if (user is null)
             return null;
 
         // Rotate the refresh token
-        await _jwtService.DeleteRefreshToken(refreshToken);
+        await _jwtService.DeleteRefreshToken(refreshTokenString);
         var newRefreshToken = await _jwtService.GenerateRefreshToken(user.Id);
 
         var accessToken = _jwtService.GenerateAccessToken(user);

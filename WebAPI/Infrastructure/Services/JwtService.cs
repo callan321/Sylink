@@ -66,17 +66,17 @@ public class JwtService(
         return _refreshTokens.DeleteAsync(token);
     }
 
-    public async Task<(bool IsValid, string? UserId)> ValidateRefreshTokenAsync(string token)
+    public async Task<RefreshToken?> ValidateRefreshTokenAsync(string token)
     {
         var refreshToken = await _refreshTokens.GetByTokenAsync(token);
 
         if (refreshToken == null || refreshToken.ExpiryDate < DateTime.UtcNow)
         {
             await _refreshTokens.DeleteAsync(token);
-            return (false, null);
+            return null;
         }
 
-        return (true, refreshToken.UserId);
+        return refreshToken;
     }
 
     public Task<ClaimsPrincipal?> GetUserClaimsFromAccessTokenAsync(HttpRequest request)

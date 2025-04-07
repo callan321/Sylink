@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebAPI.Application.Contracts.Auth;
+namespace WebAPI.Application.Contracts.Requests;
 
 public class RegisterRequest
 {
@@ -27,6 +27,7 @@ public class LoginRequest
     [Required(ErrorMessage = "Password is required.")]
     [MinLength(3, ErrorMessage = "Password must be at least 3 characters long.")]
     public required string Password { get; set; }
+    public bool RememberMe { get; set; } = false;
 }
 
 public class VerifyEmailRequest

@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.Contracts;
+﻿namespace WebAPI.Application.Contracts.Responses;
 
 public class ProfileResponse
 {

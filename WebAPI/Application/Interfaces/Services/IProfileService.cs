@@ -1,5 +1,5 @@
-﻿using WebAPI.Application.Contracts;
-using WebAPI.Application.Contracts.Common;
+﻿using WebAPI.Application.Contracts.Common;
+using WebAPI.Application.Contracts.Responses;
 
 namespace WebAPI.Application.Interfaces.Services;
 
