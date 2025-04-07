@@ -182,6 +182,8 @@ This gives full control over auth mechanics while keeping things simple.
 - [ ] Auth guards + routing
 - [ ] Homepage/dashboard
 - [ ] Profile editor
+- [ ] AuthService
+- [ ] JWT cookie handling (interceptors)
 
 ---
 
@@ -287,8 +289,8 @@ This gives full control over auth mechanics while keeping things simple.
 - [ ] Clean up expired email/password tokens
 - [ ] Revoke old refresh tokens
 - [ ] Add audit logging for auth events
-- [ ] Rate limit auth endpoints
-- [ ] Rate limit app
+- [ ] Rate limit sensitive auth endpoints (register, login, forgot-password)
+- [ ] Global app-level rate limiting (IP-based)
 
 **Wants**
 
