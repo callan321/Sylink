@@ -12,15 +12,17 @@ namespace WebAPI.Infrastructure.Services;
 public class JwtService(
     IConfiguration config,
     IRefreshTokenRepository refreshTokenRepo,
-    ICookieService cookieService) : IJwtService
+    ICookieService cookieService,
+    IUserClaimsProvider userClaimsProvider) : IJwtService
 {
     private readonly IConfiguration _config = config;
     private readonly IRefreshTokenRepository _refreshTokens = refreshTokenRepo;
     private readonly ICookieService _cookieService = cookieService;
+    private readonly IUserClaimsProvider _userClaimsProvider = userClaimsProvider;
 
     public (string Token, DateTime Expiry) GenerateAccessToken(ApplicationUser user)
     {
-        var claims = CreateUserClaims(user);
+        var claims = _userClaimsProvider.GetClaimsForUser(user);
         var expiry = GetAccessTokenExpiry();
         var key = GetSecurityKey();
 
@@ -106,20 +108,9 @@ public class JwtService(
         }
     }
 
-
     // -----------------------
     // Private Helpers
     // -----------------------
-
-    private static IEnumerable<Claim> CreateUserClaims(ApplicationUser user)
-    {
-        return
-        [
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
-        ];
-    }
 
     private DateTime GetAccessTokenExpiry()
     {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebAPI.Application.Filters;
 using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Services;
@@ -111,7 +112,15 @@ public static class ConfigureServices
     public static IServiceCollection AddAuth(this IServiceCollection services)
     {
         services.AddAuthentication();
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("VerifiedUser", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim("email_confirmed", "true");
+            });
+        });
+        services.AddHttpContextAccessor();
         return services;
     }
 
@@ -129,7 +138,8 @@ public static class ConfigureServices
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IProfileService, ProfileService>();
-
+        services.AddScoped<IUserClaimsProvider, UserClaimsProvider>();
+        services.AddScoped<IAuthenticatedUser, AuthenticatedUser>();
         return services;
     }
 }
