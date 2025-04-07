@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using WebAPI.Application.Interfaces.Services;
+using WebAPI.Application.Interfaces.Security;
 using WebAPI.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 

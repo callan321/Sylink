@@ -7,15 +7,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProfileService {
-  private readonly jsonHeaders = new HttpHeaders({});
-  private readonly profileUrl = `${environment.apiUrl}/profile`;
+  private readonly baseUrl = `${environment.apiUrl}/profile`;
+
+  private readonly secureRequestOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+    withCredentials: true,
+  };
 
   constructor(private http: HttpClient) {}
 
-  profile(): Observable<any> {
-    return this.http.get<Observable<any>>(this.profileUrl, {
-      headers: this.jsonHeaders,
-      withCredentials: true,
-    });
+  getProfile(): Observable<any> {
+    return this.http.get(this.baseUrl, this.secureRequestOptions);
   }
 }

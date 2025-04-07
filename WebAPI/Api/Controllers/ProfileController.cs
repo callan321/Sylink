@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
 
 namespace WebAPI.Api.Controllers;

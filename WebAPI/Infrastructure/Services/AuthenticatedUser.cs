@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using WebAPI.Application.Interfaces.Services;
+using WebAPI.Application.Interfaces.Security;
 
 namespace WebAPI.Infrastructure.Services;
 

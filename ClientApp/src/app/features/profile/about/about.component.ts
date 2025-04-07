@@ -29,19 +29,8 @@ export class AboutComponent implements OnInit {
     });
   }
 
-  refresh() {
-    this.authService.refresh().subscribe({
-      next: (results) => {
-        console.log(results);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
-
   ngOnInit(): void {
-    this.profileService.profile().subscribe({
+    this.profileService.getProfile().subscribe({
       next: (results) => {
         console.log(results);
         this.displayName = results.data.displayName;

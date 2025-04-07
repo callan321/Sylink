@@ -12,6 +12,7 @@ export interface RegisterPayload {
 export interface LoginPayload {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 export interface ConfirmEmailPayload {
@@ -37,66 +38,64 @@ export class AuthService {
     'Content-Type': 'application/json',
   });
 
-  private readonly registerUrl = `${environment.apiUrl}/Auth/register`;
-  private readonly loginUrl = `${environment.apiUrl}/Auth/login`;
-  private readonly confirmEmailUrl = `${environment.apiUrl}/Auth/confirm-email`;
-  private readonly forgotPasswordUrl = `${environment.apiUrl}/Auth/forgot-password`;
-  private readonly resetPasswordUrl = `${environment.apiUrl}/Auth/reset-password`;
-  private readonly logoutUrl = `${environment.apiUrl}/Auth/logout`;
-  private readonly refreshUrl = `${environment.apiUrl}/Auth/refresh-token`;
+  private readonly publicRequestOptions = {
+    headers: this.jsonHeaders,
+  };
+
+  private readonly secureRequestOptions = {
+    headers: this.jsonHeaders,
+    withCredentials: true,
+  };
+
+  private readonly baseUrl = `${environment.apiUrl}/Auth`;
 
   constructor(private http: HttpClient) {}
 
   register(payload: RegisterPayload): Observable<any> {
-    return this.http.post(this.registerUrl, payload, {
-      headers: this.jsonHeaders,
-    });
+    return this.http.post(
+      `${this.baseUrl}/register`,
+      payload,
+      this.publicRequestOptions,
+    );
   }
 
   login(payload: LoginPayload): Observable<any> {
-    return this.http.post(this.loginUrl, payload, {
-      headers: this.jsonHeaders,
-      withCredentials: true,
-    });
+    return this.http.post(
+      `${this.baseUrl}/login`,
+      payload,
+      this.secureRequestOptions,
+    );
   }
 
   confirmEmail(payload: ConfirmEmailPayload): Observable<any> {
-    return this.http.post(this.confirmEmailUrl, payload, {
-      headers: this.jsonHeaders,
-    });
+    return this.http.post(
+      `${this.baseUrl}/confirm-email`,
+      payload,
+      this.publicRequestOptions,
+    );
   }
 
   forgotPassword(payload: ForgotPasswordPayload): Observable<any> {
-    return this.http.post(this.forgotPasswordUrl, payload, {
-      headers: this.jsonHeaders,
-    });
+    return this.http.post(
+      `${this.baseUrl}/forgot-password`,
+      payload,
+      this.publicRequestOptions,
+    );
   }
 
   resetPassword(payload: ResetPasswordPayload): Observable<any> {
-    return this.http.post(this.resetPasswordUrl, payload, {
-      headers: this.jsonHeaders,
-    });
+    return this.http.post(
+      `${this.baseUrl}/reset-password`,
+      payload,
+      this.publicRequestOptions,
+    );
   }
 
   logout(): Observable<any> {
     return this.http.post(
-      this.logoutUrl,
+      `${this.baseUrl}/logout`,
       {},
-      {
-        headers: this.jsonHeaders,
-        withCredentials: true,
-      },
-    );
-  }
-
-  refresh(): Observable<any> {
-    return this.http.post(
-      this.refreshUrl,
-      {},
-      {
-        headers: this.jsonHeaders,
-        withCredentials: true,
-      },
+      this.secureRequestOptions,
     );
   }
 }

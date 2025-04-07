@@ -36,11 +36,13 @@ export class LoginComponent {
   loginForm: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
     password: ['', Validators.required],
+    rememberMe: [false],
   });
 
   onSubmit() {
     if (this.loginForm.valid) {
       const payload = this.loginForm.value;
+      console.log(payload);
       this.authService.login(payload).subscribe({
         next: (result) => {
           console.log(result);
