@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using System.Security.Claims;
+
 using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
+using WebAPI.Application.Contracts.Cookies;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
 
@@ -22,8 +24,17 @@ public class TokenService(
         var (accessToken, accessExpiry) = _jwtService.GenerateAccessToken(user);
         var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
 
-        _cookieService.SetToken(response, "access_token", accessToken, accessExpiry);
-        _cookieService.SetToken(response, "refresh_token", refreshToken.Token, refreshToken.ExpiryDate);
+        _cookieService.SetAccessToken(response, new AccessTokenDto
+        {
+            Token = accessToken,
+            Expiry = accessExpiry
+        });
+
+        _cookieService.SetRefreshToken(response, new RefreshTokenDto
+        {
+            Token = refreshToken.Token,
+            Expiry = refreshToken.ExpiryDate
+        });
 
         return OperationResult<AuthResponse>.Ok(new AuthResponse
         {
@@ -33,7 +44,7 @@ public class TokenService(
 
     public async Task<OperationResult<AuthResponse>> RefreshAsync(HttpRequest request, HttpResponse response)
     {
-        var token = _cookieService.GetToken(request, "refresh_token");
+        var token = _cookieService.GetRefreshToken(request);
         if (string.IsNullOrWhiteSpace(token))
             return OperationResult<AuthResponse>.Fail("Refresh token is missing");
 
@@ -51,21 +62,21 @@ public class TokenService(
 
     public void ClearTokens(HttpResponse response)
     {
-        _cookieService.RemoveToken(response, "access_token");
-        _cookieService.RemoveToken(response, "refresh_token");
+        _cookieService.RemoveAccessToken(response);
+        _cookieService.RemoveRefreshToken(response);
     }
 
-    public async Task<(bool IsValid, ClaimsPrincipal? Principal)> VerifyAccessTokenAsync(HttpRequest request, HttpResponse response)
+    public async Task<ClaimsPrincipal?> AuthenticateAccessTokenAsync(HttpRequest request, HttpResponse response)
     {
-        var (isValid, principal) = await _jwtService.ValidateAccessTokenAsync(request);
+        var principal = await _jwtService.GetUserClaimsFromAccessTokenAsync(request);
 
-        if (!isValid || principal == null)
+        if (principal is null)
         {
-            response.Cookies.Delete("access_token");
-            return (false, null);
+            _cookieService.RemoveAccessToken(response);
+            return null;
         }
 
-        return (true, principal);
+        return principal;
     }
 
 }

@@ -9,10 +9,14 @@ using WebAPI.Domain.Entities;
 
 namespace WebAPI.Infrastructure.Services;
 
-public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTokenRepo) : IJwtService
+public class JwtService(
+    IConfiguration config,
+    IRefreshTokenRepository refreshTokenRepo,
+    ICookieService cookieService) : IJwtService
 {
     private readonly IConfiguration _config = config;
     private readonly IRefreshTokenRepository _refreshTokens = refreshTokenRepo;
+    private readonly ICookieService _cookieService = cookieService;
 
     public (string Token, DateTime Expiry) GenerateAccessToken(ApplicationUser user)
     {
@@ -67,17 +71,13 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
         return (true, refreshToken.UserId);
     }
 
-    public Task<(bool IsValid, ClaimsPrincipal? Principal)> ValidateAccessTokenAsync(HttpRequest request)
+    public Task<ClaimsPrincipal?> GetUserClaimsFromAccessTokenAsync(HttpRequest request)
     {
-        // Get the access token from the request cookies
-        var token = request.Cookies["access_token"];
+        var token = _cookieService.GetAccessToken(request);
         if (string.IsNullOrWhiteSpace(token))
-            return Task.FromResult<(bool, ClaimsPrincipal?)>((false, null));
+            return Task.FromResult<ClaimsPrincipal?>(null);
 
-        // Create a JWT token handler
         var tokenHandler = new JwtSecurityTokenHandler();
-
-        // Define the token validation parameters
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -95,23 +95,17 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
 
         try
         {
-            // Validate the token and get the claims principal
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var _);
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            // Check if the required user ID claim is present
-            var hasUserId = principal.FindFirst(ClaimTypes.NameIdentifier) != null;
-
-            // Return result based on presence of user ID claim
-            return Task.FromResult<(bool, ClaimsPrincipal?)>(hasUserId
-                ? (true, principal)
-                : (false, null));
+            return Task.FromResult<ClaimsPrincipal?>(string.IsNullOrEmpty(userId) ? null : principal);
         }
         catch
         {
-            // Token validation failed
-            return Task.FromResult<(bool, ClaimsPrincipal?)>((false, null));
+            return Task.FromResult<ClaimsPrincipal?>(null);
         }
     }
+
 
     // -----------------------
     // Private Helpers
@@ -158,5 +152,4 @@ public class JwtService(IConfiguration config, IRefreshTokenRepository refreshTo
         rng.GetBytes(bytes);
         return Convert.ToBase64String(bytes);
     }
-
 }

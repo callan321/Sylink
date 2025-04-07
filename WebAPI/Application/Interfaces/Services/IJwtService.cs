@@ -9,6 +9,6 @@ public interface IJwtService
     Task<RefreshToken> GenerateRefreshToken(string userId);
     Task<(bool IsValid, string? UserId)> ValidateRefreshTokenAsync(string token);
 
-    public Task<(bool IsValid, ClaimsPrincipal? Principal)> ValidateAccessTokenAsync(HttpRequest request);
+    Task<ClaimsPrincipal?> GetUserClaimsFromAccessTokenAsync(HttpRequest request);
     Task DeleteRefreshToken(string token);
 }

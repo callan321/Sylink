@@ -10,15 +10,13 @@ public class AuthMiddleware(RequestDelegate next)
     {
         var tokenService = context.RequestServices.GetRequiredService<ITokenService>();
 
-        var (isValid, principal) = await tokenService.VerifyAccessTokenAsync(context.Request, context.Response);
+        var principal = await tokenService.AuthenticateAccessTokenAsync(context.Request, context.Response);
 
-        // ✅ Set user if token is valid
-        if (isValid && principal != null)
+        if (principal is not null)
         {
             context.User = principal;
         }
 
-        // ❌ Do NOT return 401 here — let [Authorize] do that
         await _next(context);
     }
 }
