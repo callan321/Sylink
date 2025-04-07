@@ -3,6 +3,7 @@ using WebAPI.Application.Contracts.Requests;
 using WebAPI.Application.Contracts.Responses;
 using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
+using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Application.Services;
 
@@ -50,9 +51,10 @@ public class AuthService(
         if (!succeeded)
             return OperationResult<object>.Fail("Invalid credentials");
 
-        await _tokenService.GenerateAndSetTokensAsync(user, response);
+        await _tokenService.GenerateAndSetTokensAsync(user, response, request.RememberMe);
         return OperationResult<object>.Ok(new { }, "Login successful");
     }
+
 
 
 

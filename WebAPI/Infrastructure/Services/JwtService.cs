@@ -48,13 +48,14 @@ public class JwtService(
     }
 
 
-    public async Task<RefreshToken> GenerateRefreshToken(string userId)
+    public async Task<RefreshToken> GenerateRefreshToken(string userId, bool isPersistent)
     {
         var refreshToken = new RefreshToken
         {
             Id = Guid.NewGuid().ToString(),
             Token = GenerateSecureRandomString(),
-            ExpiryDate = GetRefreshTokenExpiry(),
+            ExpiryDate = GetRefreshTokenExpiry(isPersistent),
+            IsPersistent = isPersistent,
             UserId = userId
         };
 
@@ -127,12 +128,22 @@ public class JwtService(
         return DateTime.UtcNow.AddMinutes(minutes);
     }
 
-    private DateTime GetRefreshTokenExpiry()
+    private DateTime GetRefreshTokenExpiry(bool isPersistent)
     {
-        var days = double.Parse(_config["JwtSettings:RefreshTokenExpiryDays"]
-            ?? throw new InvalidOperationException("JwtSettings:RefreshTokenExpiryDays is missing"));
+        if (isPersistent)
+        {
+            var days = double.Parse(_config["JwtSettings:PersistentRefreshTokenExpiryDays"]
+                ?? throw new InvalidOperationException("PersistentRefreshTokenExpiryDays is missing"));
 
-        return DateTime.UtcNow.AddDays(days);
+            return DateTime.UtcNow.AddDays(days);
+        }
+        else
+        {
+            var minutes = double.Parse(_config["JwtSettings:RefreshTokenExpiryMinutes"]
+                ?? throw new InvalidOperationException("RefreshTokenExpiryMinutes is missing"));
+
+            return DateTime.UtcNow.AddMinutes(minutes);
+        }
     }
 
     private SymmetricSecurityKey GetSecurityKey()

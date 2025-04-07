@@ -18,19 +18,20 @@ public class TokenService(
     private readonly ICookieService _cookieService = cookieService;
     private readonly IIdentityService _identityService = identityService;
 
-    public async Task GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response)
+    public async Task GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response, bool isPersistent = false)
     {
-        var accessToken = _jwtService.GenerateAccessToken(user);
-        var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
+        var accessTokenDto = _jwtService.GenerateAccessToken(user);
+        var refreshTokenEntity = await _jwtService.GenerateRefreshToken(user.Id, isPersistent);
 
-        _cookieService.SetAccessToken(response, accessToken);
+        _cookieService.SetAccessToken(response, accessTokenDto);
 
         _cookieService.SetRefreshToken(response, new RefreshTokenDto
         {
-            Token = refreshToken.Token,
-            Expiry = refreshToken.ExpiryDate
+            Token = refreshTokenEntity.Token,
+            Expiry = refreshTokenEntity.ExpiryDate
         });
     }
+
 
     public void ClearTokens(HttpResponse response)
     {
@@ -67,7 +68,7 @@ public class TokenService(
 
         // Rotate the refresh token
         await _jwtService.DeleteRefreshToken(refreshTokenString);
-        var newRefreshToken = await _jwtService.GenerateRefreshToken(user.Id);
+        var newRefreshToken = await _jwtService.GenerateRefreshToken(user.Id, refreshToken.IsPersistent);
 
         var accessToken = _jwtService.GenerateAccessToken(user);
 
