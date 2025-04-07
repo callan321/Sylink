@@ -8,7 +8,7 @@ namespace WebAPI.Application.Interfaces.Services;
 public interface ITokenService
 {
     Task<OperationResult<AuthResponse>> GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response, string message);
-    Task<OperationResult<AuthResponse>> RefreshAsync(HttpRequest request, HttpResponse response);
     Task<ClaimsPrincipal?> AuthenticateAccessTokenAsync(HttpRequest request, HttpResponse response);
+    Task<ClaimsPrincipal?> TryRefreshAsync(HttpRequest request, HttpResponse response);
     void ClearTokens(HttpResponse response);
 }

@@ -24,13 +24,6 @@ public class AuthController(IAuthService authService) : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken()
-    {
-        var result = await _authService.RefreshTokenAsync(Request, Response);
-        return result.Success ? Ok(result) : BadRequest(result);
-    }
-
     [HttpPost("confirm-email")]
     public async Task<IActionResult> ConfirmEmail([FromBody] VerifyEmailRequest request)
     {

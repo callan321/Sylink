@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
+using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Domain.Entities;
 
 namespace WebAPI.Application.Interfaces.Services;
 
 public interface IJwtService
 {
-    (string Token, DateTime Expiry) GenerateAccessToken(ApplicationUser user);
+    AccessTokenDto GenerateAccessToken(ApplicationUser user);
     Task<RefreshToken> GenerateRefreshToken(string userId);
     Task<(bool IsValid, string? UserId)> ValidateRefreshTokenAsync(string token);
 

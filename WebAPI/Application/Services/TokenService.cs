@@ -1,9 +1,7 @@
-﻿
-using System.Security.Claims;
-
+﻿using System.Security.Claims;
 using WebAPI.Application.Contracts.Auth;
 using WebAPI.Application.Contracts.Common;
-using WebAPI.Application.Contracts.Cookies;
+using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
 
@@ -21,14 +19,10 @@ public class TokenService(
 
     public async Task<OperationResult<AuthResponse>> GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response, string message)
     {
-        var (accessToken, accessExpiry) = _jwtService.GenerateAccessToken(user);
+        var accessToken = _jwtService.GenerateAccessToken(user);
         var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
 
-        _cookieService.SetAccessToken(response, new AccessTokenDto
-        {
-            Token = accessToken,
-            Expiry = accessExpiry
-        });
+        _cookieService.SetAccessToken(response, accessToken);
 
         _cookieService.SetRefreshToken(response, new RefreshTokenDto
         {
@@ -38,7 +32,7 @@ public class TokenService(
 
         return OperationResult<AuthResponse>.Ok(new AuthResponse
         {
-            TokenExpiry = accessExpiry
+            TokenExpiry = accessToken.Expiry
         }, message);
     }
 
@@ -79,4 +73,33 @@ public class TokenService(
         return principal;
     }
 
+    public async Task<ClaimsPrincipal?> TryRefreshAsync(HttpRequest request, HttpResponse response)
+    {
+        var refreshToken = _cookieService.GetRefreshToken(request);
+        if (string.IsNullOrWhiteSpace(refreshToken))
+            return null;
+
+        var (isValid, userId) = await _jwtService.ValidateRefreshTokenAsync(refreshToken);
+        if (!isValid || userId is null)
+            return null;
+
+        var user = await _identityService.GetUserByIdAsync(userId);
+        if (user is null)
+            return null;
+
+        // Rotate the refresh token
+        await _jwtService.DeleteRefreshToken(refreshToken);
+        var newRefreshToken = await _jwtService.GenerateRefreshToken(user.Id);
+
+        var accessToken = _jwtService.GenerateAccessToken(user);
+
+        _cookieService.SetAccessToken(response, accessToken);
+        _cookieService.SetRefreshToken(response, new RefreshTokenDto
+        {
+            Token = newRefreshToken.Token,
+            Expiry = newRefreshToken.ExpiryDate
+        });
+
+        return await _jwtService.GetUserClaimsFromAccessTokenAsync(request);
+    }
 }

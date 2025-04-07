@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
@@ -20,7 +21,7 @@ public class JwtService(
     private readonly ICookieService _cookieService = cookieService;
     private readonly IUserClaimsProvider _userClaimsProvider = userClaimsProvider;
 
-    public (string Token, DateTime Expiry) GenerateAccessToken(ApplicationUser user)
+    public AccessTokenDto GenerateAccessToken(ApplicationUser user)
     {
         var claims = _userClaimsProvider.GetClaimsForUser(user);
         var expiry = GetAccessTokenExpiry();
@@ -38,8 +39,13 @@ public class JwtService(
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return (tokenHandler.WriteToken(token), expiry);
+        return new AccessTokenDto
+        {
+            Token = tokenHandler.WriteToken(token),
+            Expiry = expiry
+        };
     }
+
 
     public async Task<RefreshToken> GenerateRefreshToken(string userId)
     {

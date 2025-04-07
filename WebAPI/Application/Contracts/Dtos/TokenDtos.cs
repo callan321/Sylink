@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.Contracts.Cookies;
+﻿namespace WebAPI.Application.Contracts.Dtos;
 
 
 public class AccessTokenDto

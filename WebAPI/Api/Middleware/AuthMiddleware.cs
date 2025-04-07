@@ -2,28 +2,36 @@
 
 namespace WebAPI.Api.Middleware;
 
-// Middleware that authenticates the user from the access token
+// Middleware that authenticates the user from the access token or refresh token
 public class AuthMiddleware(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next;
 
-    // This method is run for every HTTP request that enters the application
     public async Task InvokeAsync(HttpContext context)
     {
-        // Resolve the token service from dependency injection
         var tokenService = context.RequestServices.GetRequiredService<ITokenService>();
 
-        // Try to authenticate the user using the access token stored in cookies
-        // If the token is invalid, it will be removed (handled inside the service)
+        // Try to authenticate using the access token
         var principal = await tokenService.AuthenticateAccessTokenAsync(context.Request, context.Response);
 
-        // If authentication succeeded, set the user so it's available throughout the request
+        // If access token is valid, set the user
         if (principal is not null)
         {
             context.User = principal;
+            await _next(context);
+            return;
         }
 
-        // Call the next middleware in the pipeline (or the actual endpoint)
+        // Try to refresh tokens using the refresh token
+        var refreshedPrincipal = await tokenService.TryRefreshAsync(context.Request, context.Response);
+
+        // If refresh was successful, set the user
+        if (refreshedPrincipal is not null)
+        {
+            context.User = refreshedPrincipal;
+        }
+
+        // Continue with the request regardless — Use [Authorize(policy=?)]
         await _next(context);
     }
 }

@@ -1,4 +1,4 @@
-﻿using WebAPI.Application.Contracts.Cookies;
+﻿using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Application.Interfaces.Services;
 
 namespace WebAPI.Infrastructure.Services;

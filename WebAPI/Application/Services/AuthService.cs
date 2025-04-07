@@ -51,10 +51,7 @@ public class AuthService(
         return await _tokenService.GenerateAndSetTokensAsync(user, response, "Login successful");
     }
 
-    public Task<OperationResult<AuthResponse>> RefreshTokenAsync(HttpRequest request, HttpResponse response)
-    {
-        return _tokenService.RefreshAsync(request, response);
-    }
+
 
     public async Task<OperationResult<object>> ConfirmEmailAsync(VerifyEmailRequest request)
     {
@@ -73,7 +70,6 @@ public class AuthService(
         await _emailService.SendPasswordResetAsync(request.Email, token);
         return OperationResult<object>.Ok(new { }, "Password reset link sent");
     }
-
     public async Task<OperationResult<object>> ResetPasswordAsync(ResetPasswordRequest request)
     {
         var succeeded = await _identityService.ResetPasswordAsync(request.Email, request.Token, request.NewPassword);
