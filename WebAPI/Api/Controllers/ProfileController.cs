@@ -8,11 +8,11 @@ namespace WebAPI.Api.Controllers;
 [Route("api/profile")]
 [Authorize(Policy = "VerifiedUser")]
 public class ProfileController(
-    IProfileService userService,
+    IApplicationUserService userService,
     IAuthenticatedUser user
 ) : ControllerBase
 {
-    private readonly IProfileService _userService = userService;
+    private readonly IApplicationUserService _userService = userService;
     private readonly IAuthenticatedUser _user = user;
 
     [HttpGet]

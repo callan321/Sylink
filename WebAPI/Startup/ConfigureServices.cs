@@ -137,7 +137,7 @@ public static class ConfigureServices
         services.AddScoped<ICookieService, CookieService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<IApplicationUserService, ApplicationUserService>();
         services.AddScoped<IUserClaimsProvider, UserClaimsProvider>();
         services.AddScoped<IAuthenticatedUser, AuthenticatedUser>();
         return services;

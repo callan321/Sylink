@@ -4,7 +4,7 @@ using WebAPI.Application.Interfaces.Services;
 
 namespace WebAPI.Application.Services;
 
-public class ProfileService(IIdentityService identityService) : IProfileService
+public class ApplicationUserService(IIdentityService identityService) : IApplicationUserService
 {
     private readonly IIdentityService _identityService = identityService;
 
