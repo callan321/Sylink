@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AuthService } from '@core/services/auth.service';
+import { AuthService } from '@core/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { ProfileService } from '@core/services/profile.service';
+import { AuthStateService } from '@core/state/auth-state.service';
 
 @Component({
   selector: 'app-about',
@@ -12,16 +12,18 @@ import { ProfileService } from '@core/services/profile.service';
 })
 export class AboutComponent implements OnInit {
   private authService = inject(AuthService);
+  private authState = inject(AuthStateService);
   private router = inject(Router);
-  private profileService = inject(ProfileService);
+
   protected displayName = 'error';
   protected email = 'error';
   protected id = 'error';
 
   logout() {
     this.authService.logout().subscribe({
-      next: (results) => {
-        console.log(results);
+      next: () => {
+        this.authState.reset();
+        this.router.navigate(['/auth/login']);
       },
       error: (error) => {
         console.error(error);
@@ -30,7 +32,7 @@ export class AboutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.profileService.getProfile().subscribe({
+    this.authService.getStatus().subscribe({
       next: (results) => {
         console.log(results);
         this.displayName = results.data.displayName;

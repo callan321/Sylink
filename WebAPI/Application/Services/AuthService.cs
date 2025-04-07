@@ -17,7 +17,7 @@ public class AuthService(
     private readonly IEmailService _emailService = emailService;
     private readonly ITokenService _tokenService = tokenService;
 
-    public async Task<OperationResult<RegisterResponse>> RegisterAsync(RegisterRequest request)
+    public async Task<OperationResult<object>> RegisterAsync(RegisterRequest request)
     {
         var (succeeded, errors) = await _identityService.RegisterAsync(
             request.Email,
@@ -26,19 +26,15 @@ public class AuthService(
         );
 
         if (!succeeded)
-            return OperationResult<RegisterResponse>.Fail("Registration failed", errors.ToList());
+            return OperationResult<object>.Fail("Registration failed", errors.ToList());
 
         var token = await _identityService.GenerateEmailConfirmationTokenAsync(request.Email);
         if (string.IsNullOrWhiteSpace(token))
-            return OperationResult<RegisterResponse>.Fail("Failed to generate email confirmation token.");
+            return OperationResult<object>.Fail("Failed to generate email confirmation token.");
 
         await _emailService.SendEmailConfirmationAsync(request.Email, token);
 
-        return OperationResult<RegisterResponse>.Ok(new RegisterResponse
-        {
-            Email = request.Email,
-            DisplayName = request.DisplayName
-        });
+        return OperationResult<object>.Ok("Sucessfully Created a new account.");
     }
 
     public async Task<OperationResult<object>> LoginAsync(LoginRequest request, HttpResponse response)

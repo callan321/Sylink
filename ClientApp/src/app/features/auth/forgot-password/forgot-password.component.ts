@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
-import { AuthService } from '@core/services/auth.service';
+import { AuthService } from '@core/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { TextDividerComponent } from '@shared/components/text-divider/text-divider.component';
 

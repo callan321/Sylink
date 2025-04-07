@@ -10,21 +10,21 @@ public class ApplicationUserService(IIdentityService identityService) : IApplica
 {
     private readonly IIdentityService _identityService = identityService;
 
-    public async Task<OperationResult<ProfileResponse>> GetUserAsync(string userId)
+    public async Task<OperationResult<AuthStatusResponse>> GetUserAsync(string userId)
     {
         var user = await _identityService.GetUserByIdAsync(userId);
 
         if (user == null)
-            return OperationResult<ProfileResponse>.Fail("User not found");
+            return OperationResult<AuthStatusResponse>.Fail("User not found");
 
-        var response = new ProfileResponse
+        var response = new AuthStatusResponse
         {
-            Id = user.Id,
+            UserId = user.Id,
             DisplayName = user.DisplayName,
             Email = user.Email!,
         };
 
-        return OperationResult<ProfileResponse>.Ok(response);
+        return OperationResult<AuthStatusResponse>.Ok(response);
     }
 
 }

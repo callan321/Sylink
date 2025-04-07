@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '@core/services/auth.service';
+import { AuthService } from '@core/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 

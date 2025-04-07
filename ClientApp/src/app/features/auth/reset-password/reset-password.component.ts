@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '@core/services/auth.service';
+import { AuthService } from '@core/data-access/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 

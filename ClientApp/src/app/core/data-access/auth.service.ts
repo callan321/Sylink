@@ -98,4 +98,8 @@ export class AuthService {
       this.secureRequestOptions,
     );
   }
+
+  getStatus(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/status`, this.secureRequestOptions);
+  }
 }
