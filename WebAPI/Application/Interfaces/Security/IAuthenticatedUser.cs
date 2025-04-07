@@ -1,5 +1,4 @@
-﻿namespace WebAPI.Application.Interfaces.Services;
-
+﻿namespace WebAPI.Application.Interfaces.Security;
 public interface IAuthenticatedUser
 {
     string Id { get; }

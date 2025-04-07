@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using WebAPI.Application.Contracts.Common;
 using WebAPI.Domain.Entities;
+using WebAPI.Application.Interfaces.Security;
 
 namespace WebAPI.Infrastructure.Services;
 
-public class IdentityService : IIdentityService
+public class IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) : IIdentityService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-
-    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
     public async Task<(bool Succeeded, IEnumerable<FieldError> Errors)> RegisterAsync(string email, string password, string displayName)
     {

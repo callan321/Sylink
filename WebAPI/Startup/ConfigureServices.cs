@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using WebAPI.Application.Filters;
 using WebAPI.Application.Interfaces.Repositories;
+using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Application.Services;
 using WebAPI.Domain.Entities;

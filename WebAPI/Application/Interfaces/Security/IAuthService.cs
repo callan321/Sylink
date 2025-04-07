@@ -2,13 +2,12 @@
 using WebAPI.Application.Contracts.Requests;
 using WebAPI.Application.Contracts.Responses;
 
-
-namespace WebAPI.Application.Interfaces.Services;
+namespace WebAPI.Application.Interfaces.Security;
 
 public interface IAuthService
 {
     Task<OperationResult<RegisterResponse>> RegisterAsync(RegisterRequest request);
-    Task<OperationResult<AuthResponse>> LoginAsync(LoginRequest request, HttpResponse response);
+    Task<OperationResult<object>> LoginAsync(LoginRequest request, HttpResponse response);
     Task<OperationResult<object>> LogoutAsync(HttpRequest request, HttpResponse response);
     Task<OperationResult<object>> ConfirmEmailAsync(VerifyEmailRequest request);
     Task<OperationResult<object>> ForgotPasswordAsync(ForgotPasswordRequest request);

@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Application.Interfaces.Repositories;
+using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
 

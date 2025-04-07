@@ -1,5 +1,5 @@
 ﻿using WebAPI.Application.Contracts.Dtos;
-using WebAPI.Application.Interfaces.Services;
+using WebAPI.Application.Interfaces.Security;
 
 namespace WebAPI.Infrastructure.Services;
 

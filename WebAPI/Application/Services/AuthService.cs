@@ -1,6 +1,7 @@
 ﻿using WebAPI.Application.Contracts.Common;
 using WebAPI.Application.Contracts.Requests;
 using WebAPI.Application.Contracts.Responses;
+using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
 
 namespace WebAPI.Application.Services;
@@ -39,17 +40,18 @@ public class AuthService(
         });
     }
 
-    public async Task<OperationResult<AuthResponse>> LoginAsync(LoginRequest request, HttpResponse response)
+    public async Task<OperationResult<object>> LoginAsync(LoginRequest request, HttpResponse response)
     {
         var user = await _identityService.GetUserByEmailAsync(request.Email);
         if (user is null || !await _identityService.IsEmailConfirmedAsync(request.Email))
-            return OperationResult<AuthResponse>.Fail("Invalid credentials or email not confirmed");
+            return OperationResult<object>.Fail("Invalid credentials or email not confirmed");
 
         var succeeded = await _identityService.CheckPasswordSignInAsync(request.Email, request.Password);
         if (!succeeded)
-            return OperationResult<AuthResponse>.Fail("Invalid credentials");
+            return OperationResult<object>.Fail("Invalid credentials");
 
-        return await _tokenService.GenerateAndSetTokensAsync(user, response, "Login successful");
+        await _tokenService.GenerateAndSetTokensAsync(user, response);
+        return OperationResult<object>.Ok(new { }, "Login successful");
     }
 
 

@@ -2,6 +2,7 @@
 using WebAPI.Application.Contracts.Common;
 using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Application.Contracts.Responses;
+using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
 
@@ -17,7 +18,7 @@ public class TokenService(
     private readonly ICookieService _cookieService = cookieService;
     private readonly IIdentityService _identityService = identityService;
 
-    public async Task<OperationResult<AuthResponse>> GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response, string message)
+    public async Task GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response)
     {
         var accessToken = _jwtService.GenerateAccessToken(user);
         var refreshToken = await _jwtService.GenerateRefreshToken(user.Id);
@@ -29,12 +30,8 @@ public class TokenService(
             Token = refreshToken.Token,
             Expiry = refreshToken.ExpiryDate
         });
-
-        return OperationResult<AuthResponse>.Ok(new AuthResponse
-        {
-            TokenExpiry = accessToken.Expiry
-        }, message);
     }
+
     public void ClearTokens(HttpResponse response)
     {
         _cookieService.RemoveAccessToken(response);

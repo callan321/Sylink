@@ -2,7 +2,7 @@
 using WebAPI.Application.Contracts.Dtos;
 using WebAPI.Domain.Entities;
 
-namespace WebAPI.Application.Interfaces.Services;
+namespace WebAPI.Application.Interfaces.Security;
 
 public interface IJwtService
 {

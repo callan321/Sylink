@@ -1,6 +1,7 @@
 ﻿using WebAPI.Application.Contracts.Common;
 using WebAPI.Domain.Entities;
 
+namespace WebAPI.Application.Interfaces.Security;
 public interface IIdentityService
 {
     Task<(bool Succeeded, IEnumerable<FieldError> Errors)> RegisterAsync(string email, string password, string displayName);

@@ -1,13 +1,11 @@
 ﻿using System.Security.Claims;
-using WebAPI.Application.Contracts.Common;
-using WebAPI.Application.Contracts.Responses;
 using WebAPI.Domain.Entities;
 
-namespace WebAPI.Application.Interfaces.Services;
+namespace WebAPI.Application.Interfaces.Security;
 
 public interface ITokenService
 {
-    Task<OperationResult<AuthResponse>> GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response, string message);
+    Task GenerateAndSetTokensAsync(ApplicationUser user, HttpResponse response);
     Task<ClaimsPrincipal?> AuthenticateAccessTokenAsync(HttpRequest request, HttpResponse response);
     Task<ClaimsPrincipal?> TryRefreshAsync(HttpRequest request, HttpResponse response);
     void ClearTokens(HttpResponse response);
