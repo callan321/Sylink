@@ -1,5 +1,8 @@
 <div class="fullscreen-center">
   <div class="form-card">
+    <h6 class="text-red-600 text-lg mt-2">
+      {{error}}
+    </h6>
     <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div>
         <app-form-input-group
@@ -8,6 +11,7 @@
           type="email"
           autocomplete="email"
           required
+          [fieldErrors]="fieldErrors['Email']"
         />
       </div>
       <div>
@@ -17,6 +21,7 @@
           type="password"
           autocomplete="current-password"
           required
+          [fieldErrors]="fieldErrors['Password']"
         />
       </div>
       <div>
@@ -25,6 +30,7 @@
           label="Display Name"
           type="text"
           required
+          [fieldErrors]="fieldErrors['DisplayName']"
         />
       </div>
       <button type="submit" class="button-primary-full">Register</button>
@@ -36,6 +42,7 @@
       <app-auth-button provider="google" href="#" label="Google" />
       <app-auth-button provider="github" href="#" label="Github" />
     </div>
+
     <p class="mt-10 text-center text-sm/6 text-gray-500">
       Already have an account?
       <a [routerLink]="['/auth/login']" class="button-text">Login Here</a>

@@ -28,6 +28,8 @@ export class RegisterComponent {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  protected fieldErrors: Record<string, string[]> = {};
+  protected error: string = ""
 
   registerForm: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
@@ -41,13 +43,18 @@ export class RegisterComponent {
       this.authService.register(payload).subscribe({
         next: (result) => {
           console.log(result);
+          this.fieldErrors = {};
           this.router
             .navigate(['/auth/email-sent'], {
               queryParams: { email: payload.email },
             })
             .then((result) => console.log(result));
         },
-        error: (errors) => console.log(errors),
+        error: (errors) => {
+          this.fieldErrors = errors.error.errors || {};
+          console.log(errors.error);
+          this.error = ""
+        }
       });
     } else {
       this.registerForm.markAllAsTouched();

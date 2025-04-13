@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, inject, Input } from '@angular/core';
+import {booleanAttribute, Component, inject, Input, OnInit} from '@angular/core';
 import {
   ControlContainer,
   FormGroup,
@@ -18,10 +18,12 @@ export class FormInputGroupComponent {
   @Input() type: string = 'text';
   @Input() autocomplete?: string;
   @Input({ transform: booleanAttribute }) required: boolean = false;
+  @Input() fieldErrors: string[] = [];
 
   readonly controlContainer = inject(ControlContainer);
 
   get formGroup() {
     return this.controlContainer.control as FormGroup;
   }
+
 }
