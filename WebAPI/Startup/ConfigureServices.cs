@@ -22,7 +22,7 @@ public static class ConfigureServices
     {
         services.AddApi()
                 .AddCorsPolicy()
-                .AddSwaggerDocs()
+                .AddOpenApi()
                 .AddDatabase(config)
                 .AddIdentityConfig()
                 .AddAuth()
@@ -62,14 +62,7 @@ public static class ConfigureServices
         return services;
     }
 
-    /// <summary>
-    /// Enables Swagger/OpenAPI documentation.
-    /// </summary>
-    public static IServiceCollection AddSwaggerDocs(this IServiceCollection services)
-    {
-        services.AddOpenApi();
-        return services;
-    }
+
 
     /// <summary>
     /// Registers the EF Core in-memory database.

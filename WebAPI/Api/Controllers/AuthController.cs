@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Application.Contracts.Requests;
+using WebAPI.Application.Contracts.ResponsesData;
 using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
+using WebAPI.Application.Contracts.Common;
 
 namespace WebAPI.Api.Controllers;
 
@@ -14,8 +16,9 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
     private readonly IAuthenticatedUser _user = user;
     private readonly IApplicationUserService _userService = userService;
 
-
     [HttpPost("register")]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         var result = await _authService.RegisterAsync(request);
@@ -23,6 +26,8 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var result = await _authService.LoginAsync(request, Response);
@@ -30,6 +35,8 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
     }
 
     [HttpPost("confirm-email")]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ConfirmEmail([FromBody] VerifyEmailRequest request)
     {
         var result = await _authService.ConfirmEmailAsync(request);
@@ -37,6 +44,8 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
     }
 
     [HttpPost("forgot-password")]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
         var result = await _authService.ForgotPasswordAsync(request);
@@ -44,6 +53,8 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
     }
 
     [HttpPost("reset-password")]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
     {
         var result = await _authService.ResetPasswordAsync(request);
@@ -51,6 +62,8 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
     }
 
     [HttpPost("logout")]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Logout()
     {
         var result = await _authService.LogoutAsync(Request, Response);
@@ -59,10 +72,11 @@ public class AuthController(IAuthService authService, IAuthenticatedUser user, I
 
     [HttpGet("status")]
     [Authorize(Policy = "VerifiedUser")]
+    [ProducesResponseType(typeof(OperationResult<AuthStatusResponseData>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAuthStatus()
     {
         var result = await _userService.GetUserAsync(_user.Id);
         return result.Success ? Ok(result) : BadRequest(result);
     }
-
 }

@@ -1,4 +1,5 @@
 using Scalar.AspNetCore;
+using WebAPI.Api.Middleware;
 using WebAPI.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Register custom middleware
-app.UseCustomMiddleware();
+app.UseMiddleware<AuthMiddleware>();
 
 // Core middleware pipeline
 app.UseHttpsRedirection();

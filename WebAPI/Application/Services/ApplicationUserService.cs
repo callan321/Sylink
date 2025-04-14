@@ -1,5 +1,4 @@
-﻿using WebAPI.Application.Contracts.Common;
-using WebAPI.Application.Contracts.Responses;
+﻿using WebAPI.Application.Contracts.ResponsesData;
 using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
 
@@ -10,21 +9,21 @@ public class ApplicationUserService(IIdentityService identityService) : IApplica
 {
     private readonly IIdentityService _identityService = identityService;
 
-    public async Task<OperationResult<AuthStatusResponse>> GetUserAsync(string userId)
+    public async Task<OperationResult<AuthStatusResponseData>> GetUserAsync(string userId)
     {
         var user = await _identityService.GetUserByIdAsync(userId);
 
         if (user == null)
-            return OperationResult<AuthStatusResponse>.Fail("User not found");
+            return OperationResult<AuthStatusResponseData>.Fail("User not found");
 
-        var response = new AuthStatusResponse
+        var response = new AuthStatusResponseData
         {
             UserId = user.Id,
             DisplayName = user.DisplayName,
             Email = user.Email!,
         };
 
-        return OperationResult<AuthStatusResponse>.Ok(response);
+        return OperationResult<AuthStatusResponseData>.Ok(response);
     }
 
 }

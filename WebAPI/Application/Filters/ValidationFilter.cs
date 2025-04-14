@@ -2,30 +2,35 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebAPI.Application.Contracts.Common;
 
-namespace WebAPI.Application.Filters
+namespace WebAPI.Application.Filters;
+
+public class ValidationFilter : IActionFilter
 {
-    public class ValidationFilter : IActionFilter
+    public void OnActionExecuting(ActionExecutingContext context)
     {
-        public void OnActionExecuting(ActionExecutingContext context)
+        if (!context.ModelState.IsValid)
         {
-            if (!context.ModelState.IsValid)
-            {
-                var errors = context.ModelState
-                    .Where(x => x.Value?.Errors.Count > 0)
-                    .SelectMany(x => x.Value!.Errors.Select(e => new FieldError
-                    {
-                        Field = x.Key,
-                        Message = e.ErrorMessage
-                    }))
-                    .ToList();
+            var errors = context.ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .SelectMany(x => x.Value!.Errors.Select(e => new FieldError
+                {
+                    Field = x.Key,
+                    Message = e.ErrorMessage
+                }))
+                .ToList();
 
-                context.Result = new BadRequestObjectResult(errors);
-            }
-        }
+            var result = OperationResult<object>.Fail(
+                message: "Validation failed",
+                errors: errors,
+                errorCode: "ValidationError"
+            );
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            // no-op
+            context.Result = new BadRequestObjectResult(result);
         }
+    }
+
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        // No-op
     }
 }

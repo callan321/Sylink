@@ -1,9 +1,8 @@
-﻿using WebAPI.Application.Contracts.Common;
-using WebAPI.Application.Contracts.Responses;
+﻿using WebAPI.Application.Contracts.ResponsesData;
 
 namespace WebAPI.Application.Interfaces.Services;
 
 public interface IApplicationUserService
 {
-    Task<OperationResult<AuthStatusResponse>> GetUserAsync(string userId);
+    Task<OperationResult<AuthStatusResponseData>> GetUserAsync(string userId);
 }

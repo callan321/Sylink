@@ -14,7 +14,7 @@ public class IdentityService(UserManager<ApplicationUser> userManager, SignInMan
     {
         var user = new ApplicationUser { Email = email, UserName = email, DisplayName = displayName };
         var result = await _userManager.CreateAsync(user, password);
-        var errors = result.Errors.Select(e => new FieldError { Message = e.Description });
+        var errors = MapIdentityErrors(result.Errors);
         return (result.Succeeded, errors);
     }
 
@@ -65,4 +65,27 @@ public class IdentityService(UserManager<ApplicationUser> userManager, SignInMan
 
     public Task<ApplicationUser?> GetUserByEmailAsync(string email) => _userManager.FindByEmailAsync(email);
     public Task<ApplicationUser?> GetUserByIdAsync(string id) => _userManager.FindByIdAsync(id);
+
+    private static IEnumerable<FieldError> MapIdentityErrors(IEnumerable<IdentityError> errors)
+    {
+        return errors.Select(e => new FieldError
+        {
+            Field = MapFieldFromCode(e.Code),
+            Message = e.Description
+        });
+    }
+
+    private static string MapFieldFromCode(string code)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+            return "general";
+
+        return code.ToLower() switch
+        {
+            var c when c.Contains("email") => "email",
+            var c when c.Contains("password") => "password",
+            var c when c.Contains("username") => "displayName",
+            _ => "general"
+        };
+    }
 }
