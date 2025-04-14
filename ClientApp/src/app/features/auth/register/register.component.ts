@@ -10,6 +10,7 @@ import {
 import { AuthService } from '@core/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
+import { FormErrorMessageComponent } from '@shared/components/form-error-message/form-error-message.component';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +20,7 @@ import { FormInputGroupComponent } from '@shared/components/form-input-group/for
     ReactiveFormsModule,
     FormInputGroupComponent,
     RouterLink,
+    FormErrorMessageComponent,
   ],
   templateUrl: './register.component.html',
   standalone: true,
@@ -29,7 +31,7 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   protected fieldErrors: Record<string, string[]> = {};
-  protected error: string = ""
+  protected errorMessage: string = '';
 
   registerForm: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
@@ -44,6 +46,7 @@ export class RegisterComponent {
         next: (result) => {
           console.log(result);
           this.fieldErrors = {};
+          this.errorMessage = '';
           this.router
             .navigate(['/auth/email-sent'], {
               queryParams: { email: payload.email },
@@ -52,9 +55,9 @@ export class RegisterComponent {
         },
         error: (errors) => {
           this.fieldErrors = errors.error.errors || {};
+          this.errorMessage = errors.error.title;
           console.log(errors.error);
-          this.error = ""
-        }
+        },
       });
     } else {
       this.registerForm.markAllAsTouched();

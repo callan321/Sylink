@@ -1,9 +1,9 @@
 <div class="fullscreen-center">
   <div class="form-card">
-    <h6 class="text-red-600 text-lg mt-2">
-      {{error}}
-    </h6>
     <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="">
+        <app-form-error-message [errorMessage]="errorMessage" />
+      </div>
       <div>
         <app-form-input-group
           id="email"
