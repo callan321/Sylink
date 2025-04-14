@@ -1,21 +1,36 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WebAPI.Application.Contracts.Common;
-using WebAPI.Domain.Entities;
 using WebAPI.Application.Interfaces.Security;
+using WebAPI.Domain.Entities;
 
 namespace WebAPI.Infrastructure.Services;
 
-public class IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) : IIdentityService
+public class IdentityService(
+    UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager
+) : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
     public async Task<(bool Succeeded, IEnumerable<FieldError> Errors)> RegisterAsync(string email, string password, string displayName)
     {
-        var user = new ApplicationUser { Email = email, UserName = email, DisplayName = displayName };
+        var user = new ApplicationUser
+        {
+            Email = email,
+            UserName = email,
+            DisplayName = displayName
+        };
+
         var result = await _userManager.CreateAsync(user, password);
-        var errors = MapIdentityErrors(result.Errors);
-        return (result.Succeeded, errors);
+
+        return (result.Succeeded,
+            result.Errors.Select(e => new FieldError
+            {
+                Field = FieldName.General,
+                Message = e.Description
+            }));
     }
 
     public async Task<bool> CheckPasswordSignInAsync(string email, string password)
@@ -63,29 +78,15 @@ public class IdentityService(UserManager<ApplicationUser> userManager, SignInMan
         return result.Succeeded;
     }
 
-    public Task<ApplicationUser?> GetUserByEmailAsync(string email) => _userManager.FindByEmailAsync(email);
-    public Task<ApplicationUser?> GetUserByIdAsync(string id) => _userManager.FindByIdAsync(id);
+    public Task<ApplicationUser?> GetUserByEmailAsync(string email)
+        => _userManager.FindByEmailAsync(email);
 
-    private static IEnumerable<FieldError> MapIdentityErrors(IEnumerable<IdentityError> errors)
+    public Task<ApplicationUser?> GetUserByIdAsync(string id)
+        => _userManager.FindByIdAsync(id);
+
+    public async Task<ApplicationUser?> GetUserByDisplayNameAsync(string displayName)
     {
-        return errors.Select(e => new FieldError
-        {
-            Field = MapFieldFromCode(e.Code),
-            Message = e.Description
-        });
-    }
-
-    private static string MapFieldFromCode(string code)
-    {
-        if (string.IsNullOrWhiteSpace(code))
-            return "general";
-
-        return code.ToLower() switch
-        {
-            var c when c.Contains("email") => "email",
-            var c when c.Contains("password") => "password",
-            var c when c.Contains("username") => "displayName",
-            _ => "general"
-        };
+        return await _userManager.Users
+            .FirstOrDefaultAsync(u => u.DisplayName.ToLower() == displayName.ToLower());
     }
 }

@@ -13,4 +13,6 @@ public interface IIdentityService
     Task<bool> ResetPasswordAsync(string email, string token, string newPassword);
     Task<ApplicationUser?> GetUserByEmailAsync(string email);
     Task<ApplicationUser?> GetUserByIdAsync(string id);
+    Task<ApplicationUser?> GetUserByDisplayNameAsync(string displayName);
+
 }

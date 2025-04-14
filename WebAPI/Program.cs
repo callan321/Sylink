@@ -18,6 +18,7 @@ if (app.Environment.IsDevelopment())
 
 // Register custom middleware
 app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Core middleware pipeline
 app.UseHttpsRedirection();

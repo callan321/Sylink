@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using WebAPI.Application.Filters;
+using System.Text.Json.Serialization;
+using WebAPI.Api.Filters;
 using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
@@ -22,7 +24,6 @@ public static class ConfigureServices
     {
         services.AddApi()
                 .AddCorsPolicy()
-                .AddOpenApi()
                 .AddDatabase(config)
                 .AddIdentityConfig()
                 .AddAuth()
@@ -39,7 +40,17 @@ public static class ConfigureServices
         services.AddControllers(options =>
         {
             options.Filters.Add<ValidationFilter>();
+        })
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
+        services.AddOpenApi();
+
         return services;
     }
 
@@ -91,9 +102,8 @@ public static class ConfigureServices
             options.Password.RequireLowercase = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 3;
+            options.Password.RequiredLength = 0;
             options.Password.RequiredUniqueChars = 0;
-            options.Lockout.MaxFailedAccessAttempts = 5;
             options.User.RequireUniqueEmail = true;
         });
 

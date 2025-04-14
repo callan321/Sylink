@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebAPI.Application.Validation;
 
 namespace WebAPI.Application.Contracts.Requests;
 
 public class RegisterRequest
 {
     [Required(ErrorMessage = "Email is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email format.")]
+    [StrongEmailValidation(ErrorMessage = "Invalid email format.")]
+    [UniqueEmail(ErrorMessage = "Email is already taken.")]
     public required string Email { get; set; }
 
     [Required(ErrorMessage = "Password is required.")]
@@ -15,13 +17,15 @@ public class RegisterRequest
     [Required(ErrorMessage = "Display name is required.")]
     [StringLength(16, MinimumLength = 3, ErrorMessage = "Display name must be between 3 and 16 characters long.")]
     [RegularExpression(@"^[a-zA-Z0-9 ]+$", ErrorMessage = "Display name can only contain letters, numbers, and spaces.")]
+    [UniqueDisplayName(ErrorMessage = "Display name is already taken.")]
     public required string DisplayName { get; set; }
 }
+
 
 public class LoginRequest
 {
     [Required(ErrorMessage = "Email is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email format.")]
+    [StrongEmailValidation(ErrorMessage = "Invalid email format.")]
     public required string Email { get; set; }
 
     [Required(ErrorMessage = "Password is required.")]
@@ -40,7 +44,7 @@ public class VerifyEmailRequest
 public class ForgotPasswordRequest
 {
     [Required(ErrorMessage = "Email is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email format.")]
+    [StrongEmailValidation(ErrorMessage = "Invalid email format.")]
     public required string Email { get; set; }
 }
 

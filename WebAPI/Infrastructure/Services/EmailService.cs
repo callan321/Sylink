@@ -8,7 +8,7 @@ public class EmailService : IEmailService
 
     public Task SendEmailConfirmationAsync(string email, string token)
     {
-        var confirmLink = $"{frontendUrl}/auth/confirm-email?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
+        var confirmLink = $"{frontendUrl}/confirm-email?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("\n[Email Confirmation]");
@@ -27,7 +27,7 @@ public class EmailService : IEmailService
 
     public Task SendPasswordResetAsync(string email, string token)
     {
-        var resetLink = $"{frontendUrl}/auth/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
+        var resetLink = $"{frontendUrl}/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(email)}";
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("\n[Password Reset]");
