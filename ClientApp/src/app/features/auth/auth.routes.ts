@@ -1,23 +1,54 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { ForgotPasswordComponent } from '@features/auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from '@features/auth/reset-password/reset-password.component';
-import { ConfirmEmailComponent } from '@features/auth/confirm-email/confirm-email.component';
-import { EmailSentComponent } from '@features/auth/email-sent/email-sent.component';
-import { AuthLayoutComponent } from '@features/auth/auth-layout/auth-layout.component';
+import { AppRoutes } from '@core/constants/app.routes';
 
 export const authRoutes: Routes = [
   {
-    path: '',
-    component: AuthLayoutComponent,
+    path: AppRoutes.auth.route,
+    loadComponent: () =>
+      import('./auth-layout/auth-layout.component').then(
+        (c) => c.AuthLayoutComponent,
+      ),
     children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'email-sent', component: EmailSentComponent },
-      { path: 'confirm-email', component: ConfirmEmailComponent },
-      { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'reset-password', component: ResetPasswordComponent },
+      {
+        path: AppRoutes.auth.login,
+        loadComponent: () =>
+          import('./login/login.component').then((c) => c.LoginComponent),
+      },
+      {
+        path: AppRoutes.auth.register,
+        loadComponent: () =>
+          import('./register/register.component').then(
+            (c) => c.RegisterComponent,
+          ),
+      },
+      {
+        path: AppRoutes.auth.forgotPassword,
+        loadComponent: () =>
+          import('./forgot-password/forgot-password.component').then(
+            (c) => c.ForgotPasswordComponent,
+          ),
+      },
+      {
+        path: AppRoutes.auth.resetPassword,
+        loadComponent: () =>
+          import('./reset-password/reset-password.component').then(
+            (c) => c.ResetPasswordComponent,
+          ),
+      },
+      {
+        path: AppRoutes.auth.emailSent,
+        loadComponent: () =>
+          import('./email-sent/email-sent.component').then(
+            (c) => c.EmailSentComponent,
+          ),
+      },
+      {
+        path: AppRoutes.auth.confirmEmail,
+        loadComponent: () =>
+          import('./confirm-email/confirm-email.component').then(
+            (c) => c.ConfirmEmailComponent,
+          ),
+      },
     ],
   },
 ];

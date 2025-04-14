@@ -24,7 +24,7 @@
       label="Remember Me"
     />
     <div class="text-sm/6">
-      <a [routerLink]="['/auth/forgot-password']" class="button-text">
+      <a [routerLink]="[getAuthPath('forgotPassword')]" class="button-text">
         Forgot password?
       </a>
     </div>
@@ -42,6 +42,6 @@
 
 <p class="mt-10 text-center text-sm/6 text-gray-500">
   Don't have an account?
-  <a [routerLink]="['/auth/register']" class="button-text">Register Here</a>
+  <a [routerLink]="[getAuthPath('register')]" class="button-text">Register Here</a>
 </p>
 

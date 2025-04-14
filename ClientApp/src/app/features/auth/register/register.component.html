@@ -31,7 +31,11 @@
       [fieldErrors]="fieldErrors['DisplayName']"
     />
   </div>
-  <button type="submit" class="button-primary-full">Register</button>
+  <app-form-submit-button
+    [label]="'Register'"
+    [disabled]="getButtonDisabled()"
+    [loadingLabel]="'Registering...'"
+  />
 </form>
 <app-text-divider label="Or register with" />
 <div class="mt-6 grid grid-cols-2 gap-4">
@@ -40,6 +44,6 @@
 </div>
 <p class="mt-10 text-center text-sm/6 text-gray-500">
   Already have an account?
-  <a [routerLink]="['/auth/login']" class="button-text">Login Here</a>
+  <a [routerLink]="[AppRoutes.auth.login]" class="button-text">Login Here</a>
 </p>
 

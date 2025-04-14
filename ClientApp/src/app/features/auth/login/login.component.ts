@@ -12,6 +12,7 @@ import {
 import { AuthService } from '@core/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
+import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
 
 @Component({
   selector: 'app-login',
@@ -53,4 +54,7 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
     }
   }
+
+  protected readonly AppRoutes = AppRoutes;
+  protected readonly getAuthPath = getAuthPath;
 }

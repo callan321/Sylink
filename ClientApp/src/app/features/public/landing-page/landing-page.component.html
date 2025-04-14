@@ -12,11 +12,11 @@
         productivity and creativity.
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">
-        <a [routerLink]="['/profile']" class="button-primary">Profile</a>
-        <a [routerLink]="['/auth/login']" class="button-primary">Log In</a>
-        <a [routerLink]="['/auth/register']" class="button-text"
-          >Register <span aria-hidden="true">→</span></a
-        >
+        <a [routerLink]="[getProfilePath('index')]" class="button-primary">Profile</a>
+        <a [routerLink]="[getAuthPath('login')]" class="button-primary">Log In</a>
+        <a [routerLink]="[getAuthPath('register')]" class="button-text">
+          Register <span aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </div>

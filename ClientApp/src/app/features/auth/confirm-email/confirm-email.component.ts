@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/data-access/auth.service';
+import { getAuthPath } from '@core/constants/app.routes';
 
 @Component({
   selector: 'app-confirm-email',
@@ -28,7 +29,7 @@ export class ConfirmEmailComponent implements OnInit {
       next: (result) => {
         console.log(result);
         this.router
-          .navigate(['/auth/login'])
+          .navigate([getAuthPath('login')])
           .then((result) => console.log(result));
       },
       error: (error) => console.log(error),

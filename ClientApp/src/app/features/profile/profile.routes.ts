@@ -1,4 +1,10 @@
 import { Routes } from '@angular/router';
-import { AboutComponent } from '@features/profile/about/about.component';
+import { AppRoutes } from '@core/constants/app.routes';
 
-export const profileRoutes: Routes = [{ path: '', component: AboutComponent }];
+export const profileRoutes: Routes = [
+  {
+    path: AppRoutes.profile.index,
+    loadComponent: () =>
+      import('./about/about.component').then((c) => c.AboutComponent),
+  },
+];

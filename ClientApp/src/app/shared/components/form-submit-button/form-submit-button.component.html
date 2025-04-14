@@ -1,0 +1,17 @@
+<button
+  type="submit"
+  [disabled]="disabled"
+  class="w-full rounded-md bg-gray-800 px-4 py-2.5 text-sm font-medium text-white shadow hover:bg-gray-700 disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-800"
+>
+  @if (!disabled) {
+    {{ label }}
+  } @else {
+    <span class="flex items-center justify-center gap-2">
+      <span
+        class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+        aria-hidden="true"
+      ></span>
+      {{ loadingLabel }}
+    </span>
+  }
+</button>

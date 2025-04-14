@@ -1,32 +1,35 @@
 import { Routes } from '@angular/router';
+import { AppRoutes } from '@core/constants/app.routes';
 import { authRoutes } from '@features/auth/auth.routes';
 import { profileRoutes } from '@features/profile/profile.routes';
 import { authGuard } from '@core/guards/auth.guard';
+import { redirectIfAuthenticatedGuard } from '@core/guards/redirect-if-authenticated.guard';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: AppRoutes.public.landing,
     loadComponent: () =>
       import('@features/public/landing-page/landing-page.component').then(
-        (component) => component.LandingPageComponent,
+        (c) => c.LandingPageComponent,
       ),
   },
   {
-    path: 'auth',
+    path: AppRoutes.auth.route,
+    canActivate: [redirectIfAuthenticatedGuard],
     loadChildren: () =>
-      import('./features/auth/auth.routes').then(() => authRoutes),
+      import('@features/auth/auth.routes').then(() => authRoutes),
   },
   {
-    path: 'profile',
+    path: AppRoutes.profile.route,
     canActivate: [authGuard],
     loadChildren: () =>
-      import('./features/profile/profile.routes').then(() => profileRoutes),
+      import('@features/profile/profile.routes').then(() => profileRoutes),
   },
   {
-    path: '**',
+    path: AppRoutes.public.notFound,
     loadComponent: () =>
       import('@features/public/page-not-found/page-not-found.component').then(
-        (component) => component.PageNotFoundComponent,
+        (c) => c.PageNotFoundComponent,
       ),
   },
 ];

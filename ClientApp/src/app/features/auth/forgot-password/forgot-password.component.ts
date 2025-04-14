@@ -9,6 +9,7 @@ import { FormInputGroupComponent } from '@shared/components/form-input-group/for
 import { AuthService } from '@core/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { TextDividerComponent } from '@shared/components/text-divider/text-divider.component';
+import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
 
 @Component({
   selector: 'app-forgot-password',
@@ -40,4 +41,7 @@ export class ForgotPasswordComponent {
       });
     }
   }
+
+  protected readonly AppRoutes = AppRoutes;
+  protected readonly getAuthPath = getAuthPath;
 }
