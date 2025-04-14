@@ -1,51 +1,45 @@
-<div class="fullscreen-center">
-  <div class="form-card">
-    <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="">
-        <app-form-error-message [errorMessage]="errorMessage" />
-      </div>
-      <div>
-        <app-form-input-group
-          id="email"
-          label="Email address"
-          type="email"
-          autocomplete="email"
-          required
-          [fieldErrors]="fieldErrors['Email']"
-        />
-      </div>
-      <div>
-        <app-form-input-group
-          id="password"
-          label="Password"
-          type="password"
-          autocomplete="current-password"
-          required
-          [fieldErrors]="fieldErrors['Password']"
-        />
-      </div>
-      <div>
-        <app-form-input-group
-          id="displayName"
-          label="Display Name"
-          type="text"
-          required
-          [fieldErrors]="fieldErrors['DisplayName']"
-        />
-      </div>
-      <button type="submit" class="button-primary-full">Register</button>
-    </form>
-
-    <app-text-divider label="Or register with" />
-
-    <div class="mt-6 grid grid-cols-2 gap-4">
-      <app-auth-button provider="google" href="#" label="Google" />
-      <app-auth-button provider="github" href="#" label="Github" />
-    </div>
-
-    <p class="mt-10 text-center text-sm/6 text-gray-500">
-      Already have an account?
-      <a [routerLink]="['/auth/login']" class="button-text">Login Here</a>
-    </p>
-  </div>
+<div class="pb-6">
+  <app-form-error-message [errorMessage]="errorMessage" />
 </div>
+<form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div>
+    <app-form-input-group
+      id="email"
+      label="Email address"
+      type="email"
+      autocomplete="email"
+      required
+      [fieldErrors]="fieldErrors['Email']"
+    />
+  </div>
+  <div>
+    <app-form-input-group
+      id="password"
+      label="Password"
+      type="password"
+      autocomplete="current-password"
+      required
+      [fieldErrors]="fieldErrors['Password']"
+    />
+  </div>
+  <div>
+    <app-form-input-group
+      id="displayName"
+      label="Display Name"
+      type="text"
+      required
+      [fieldErrors]="fieldErrors['DisplayName']"
+    />
+  </div>
+  <button type="submit" class="button-primary-full">Register</button>
+</form>
+<app-text-divider label="Or register with" />
+<div class="mt-6 grid grid-cols-2 gap-4">
+  <app-auth-button provider="google" href="#" label="Google" />
+  <app-auth-button provider="github" href="#" label="Github" />
+</div>
+<p class="mt-10 text-center text-sm/6 text-gray-500">
+  Already have an account?
+  <a [routerLink]="['/auth/login']" class="button-text">Login Here</a>
+</p>
+

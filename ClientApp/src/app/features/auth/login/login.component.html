@@ -1,50 +1,47 @@
-<div class="fullscreen-center">
-  <div class="form-card">
-    <form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div>
-        <app-form-input-group
-          id="email"
-          label="Email address"
-          type="email"
-          autocomplete="email"
-          required
-        />
-      </div>
-      <div>
-        <app-form-input-group
-          id="password"
-          label="Password"
-          type="password"
-          autocomplete="current-password"
-          required
-        />
-      </div>
-      <div class="flex items-center justify-between">
-        <app-form-checkbox
-          id="remember-me"
-          name="rememberMe"
-          label="Remember Me"
-        />
-        <div class="text-sm/6">
-          <a [routerLink]="['/auth/forgot-password']" class="button-text">
-            Forgot password?
-          </a>
-        </div>
-      </div>
-
-      <button type="submit" class="button-primary-full">Sign in</button>
-    </form>
-
-    <app-text-divider label="Or continue with" />
-
-    <div class="mt-6 grid grid-cols-2 gap-4">
-      <app-auth-button provider="google" href="#" label="Google" />
-      <app-auth-button provider="github" href="#" label="Github" />
-    </div>
-
-    <p class="mt-10 text-center text-sm/6 text-gray-500">
-      Don't have an account?
-      <a [routerLink]="['/auth/register']" class="button-text">Register Here</a>
-    </p>
+<form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <app-form-input-group
+      id="email"
+      label="Email address"
+      type="email"
+      autocomplete="email"
+      required
+    />
   </div>
+  <div>
+    <app-form-input-group
+      id="password"
+      label="Password"
+      type="password"
+      autocomplete="current-password"
+      required
+    />
+  </div>
+  <div class="flex items-center justify-between">
+    <app-form-checkbox
+      id="remember-me"
+      name="rememberMe"
+      label="Remember Me"
+    />
+    <div class="text-sm/6">
+      <a [routerLink]="['/auth/forgot-password']" class="button-text">
+        Forgot password?
+      </a>
+    </div>
+  </div>
+
+  <button type="submit" class="button-primary-full">Sign in</button>
+</form>
+
+<app-text-divider label="Or continue with" />
+
+<div class="mt-6 grid grid-cols-2 gap-4">
+  <app-auth-button provider="google" href="#" label="Google" />
+  <app-auth-button provider="github" href="#" label="Github" />
 </div>
+
+<p class="mt-10 text-center text-sm/6 text-gray-500">
+  Don't have an account?
+  <a [routerLink]="['/auth/register']" class="button-text">Register Here</a>
+</p>
+

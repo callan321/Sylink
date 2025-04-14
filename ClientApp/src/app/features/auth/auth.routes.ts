@@ -5,12 +5,19 @@ import { ForgotPasswordComponent } from '@features/auth/forgot-password/forgot-p
 import { ResetPasswordComponent } from '@features/auth/reset-password/reset-password.component';
 import { ConfirmEmailComponent } from '@features/auth/confirm-email/confirm-email.component';
 import { EmailSentComponent } from '@features/auth/email-sent/email-sent.component';
+import { AuthLayoutComponent } from '@features/auth/auth-layout/auth-layout.component';
 
 export const authRoutes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'email-sent', component: EmailSentComponent },
-  { path: 'confirm-email', component: ConfirmEmailComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'email-sent', component: EmailSentComponent },
+      { path: 'confirm-email', component: ConfirmEmailComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
+    ],
+  },
 ];

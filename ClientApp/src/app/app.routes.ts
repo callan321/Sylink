@@ -7,26 +7,26 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./features/onboarding/landing-page/landing-page.component').then(
-        (c) => c.LandingPageComponent,
+      import('@features/public/landing-page/landing-page.component').then(
+        (component) => component.LandingPageComponent,
       ),
   },
   {
     path: 'auth',
     loadChildren: () =>
-      import('./features/auth/auth.routes').then((r) => authRoutes),
+      import('./features/auth/auth.routes').then(() => authRoutes),
   },
   {
     path: 'profile',
     canActivate: [authGuard],
     loadChildren: () =>
-      import('./features/profile/profile.routes').then((r) => profileRoutes),
+      import('./features/profile/profile.routes').then(() => profileRoutes),
   },
   {
     path: '**',
     loadComponent: () =>
-      import('./core/components/not-found/not-found.component').then(
-        (c) => c.NotFoundComponent,
+      import('@features/public/page-not-found/page-not-found.component').then(
+        (component) => component.PageNotFoundComponent,
       ),
   },
 ];
