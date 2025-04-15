@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WebAPI.Api.Filters;
+using WebAPI.Api.OpenApi;
 using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Security;
 using WebAPI.Application.Interfaces.Services;
@@ -49,8 +52,13 @@ public static class ConfigureServices
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-        services.AddOpenApi();
 
+        services.AddOpenApi(options =>
+        {
+            options.AddOperationTransformer<JsonOnlyOperationTransformer>();
+            options.AddOperationTransformer<AuthCookieOperationTransformer>();
+            options.AddDocumentTransformer<CookieAuthDocumentTransformer>();
+        });
         return services;
     }
 
