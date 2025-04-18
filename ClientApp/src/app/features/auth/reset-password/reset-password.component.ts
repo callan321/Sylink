@@ -1,15 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '@core/data-access/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, ResetPasswordRequest } from '@core/api-client';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
+import {getAuthPath} from '@core/constants/app.routes';
 
 @Component({
   selector: 'app-reset-password',
-  imports: [FormInputGroupComponent, ReactiveFormsModule],
-  templateUrl: './reset-password.component.html',
   standalone: true,
+  templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
+  imports: [FormInputGroupComponent, ReactiveFormsModule],
 })
 export class ResetPasswordComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
@@ -31,19 +32,14 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit() {
     if (this.email && this.token && this.resetPasswordForm.valid) {
-      const payload = {
+      const payload: ResetPasswordRequest = {
         email: this.email,
         token: this.token,
         newPassword: this.resetPasswordForm.value.password!,
       };
-      this.authService.resetPassword(payload).subscribe({
-        next: (result) => {
-          console.log(result);
-          this.router
-            .navigate(['/auth/login'])
-            .then((result) => console.log(result));
-        },
-        error: (error) => console.log(error),
+      this.authService.apiAuthResetPasswordPost(payload).subscribe({
+        next: () => this.router.navigate([getAuthPath('login')]),
+        error: (err) => console.error(err),
       });
     }
   }

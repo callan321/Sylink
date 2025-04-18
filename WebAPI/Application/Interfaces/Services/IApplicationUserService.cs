@@ -4,5 +4,5 @@ namespace WebAPI.Application.Interfaces.Services;
 
 public interface IApplicationUserService
 {
-    Task<OperationResult<AuthStatusResponseData>> GetUserAsync(string userId);
+    Task<OperationResult<AuthStatusResponse>> GetUserAsync(string userId);
 }

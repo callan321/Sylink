@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '@core/data-access/auth.service';
+import { AuthService } from '@core/api-client';
+import { VerifyEmailRequest } from '@core/api-client';
 import { getAuthPath } from '@core/constants/app.routes';
 
 @Component({
   selector: 'app-confirm-email',
-  imports: [],
-  templateUrl: './confirm-email.component.html',
   standalone: true,
+  templateUrl: './confirm-email.component.html',
   styleUrl: './confirm-email.component.scss',
 })
 export class ConfirmEmailComponent implements OnInit {
@@ -15,24 +15,15 @@ export class ConfirmEmailComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
 
-  email!: string;
-  token!: string;
-
   ngOnInit() {
-    this.email = this.route.snapshot.queryParamMap.get('email') || '';
-    this.token = this.route.snapshot.queryParamMap.get('token') || '';
-    const payload = {
-      email: this.email,
-      token: this.token,
-    };
-    this.authService.confirmEmail(payload).subscribe({
-      next: (result) => {
-        console.log(result);
-        this.router
-          .navigate([getAuthPath('login')])
-          .then((result) => console.log(result));
+    const email = this.route.snapshot.queryParamMap.get('email') || '';
+    const token = this.route.snapshot.queryParamMap.get('token') || '';
+    const payload: VerifyEmailRequest = { email, token };
+    this.authService.apiAuthConfirmEmailPost(payload).subscribe({
+      next: () => {
+        this.router.navigate([getAuthPath('login')]);
       },
-      error: (error) => console.log(error),
+      error: (err) => console.error(err),
     });
   }
 }

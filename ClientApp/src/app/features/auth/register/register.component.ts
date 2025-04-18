@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '@core/data-access/auth.service';
+import { AuthService, RegisterRequest } from '@core/api-client';
 import { AbstractFormComponent } from '@shared/form/abstract-form.component';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 import { FormErrorMessageComponent } from '@shared/components/form-error-message/form-error-message.component';
@@ -11,15 +11,11 @@ import { FormSubmitButtonComponent } from '@shared/components/form-submit-button
 import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
 import { TypedFormGroup } from '@shared/form/types';
 
-type RegisterFormFields = {
-  email: string;
-  password: string;
-  displayName: string;
-};
-
 @Component({
   selector: 'app-register',
   standalone: true,
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss',
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -29,26 +25,24 @@ type RegisterFormFields = {
     AuthButtonComponent,
     FormSubmitButtonComponent,
   ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
 })
 export class RegisterComponent extends AbstractFormComponent {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  registerForm = this.formBuilder.nonNullable.group<RegisterFormFields>({
+  registerForm = this.formBuilder.nonNullable.group<RegisterRequest>({
     email: '',
     password: '',
     displayName: '',
   });
 
-  override getForm(): TypedFormGroup<RegisterFormFields> {
+  override getForm(): TypedFormGroup<RegisterRequest> {
     return this.registerForm;
   }
 
-  override buildPayload(): RegisterFormFields {
-    return this.registerForm.value as RegisterFormFields;
+  override buildPayload(): RegisterRequest {
+    return this.registerForm.getRawValue() as RegisterRequest;
   }
 
   override onSubmitSuccess(): void {
@@ -59,7 +53,7 @@ export class RegisterComponent extends AbstractFormComponent {
   }
 
   onSubmit(): void {
-    this.submitForm((payload) => this.authService.register(payload));
+    this.submitForm((payload) => this.authService.apiAuthRegisterPost(payload));
   }
 
   protected readonly AppRoutes = AppRoutes;

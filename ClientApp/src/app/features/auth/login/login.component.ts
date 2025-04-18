@@ -1,21 +1,18 @@
 import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService, LoginRequest } from '@core/api-client';
 import { AuthButtonComponent } from '@shared/components/auth-button/auth-button.component';
 import { FormCheckboxComponent } from '@shared/components/form-checkbox/form-checkbox.component';
 import { TextDividerComponent } from '@shared/components/text-divider/text-divider.component';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { AuthService } from '@core/data-access/auth.service';
-import { Router, RouterLink } from '@angular/router';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss',
   imports: [
     AuthButtonComponent,
     FormCheckboxComponent,
@@ -25,9 +22,6 @@ import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
     RouterLink,
     FormInputGroupComponent,
   ],
-  templateUrl: './login.component.html',
-  standalone: true,
-  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   private formBuilder = inject(FormBuilder);
@@ -42,13 +36,10 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const payload = this.loginForm.value;
-      console.log(payload);
-      this.authService.login(payload).subscribe({
-        next: (result) => {
-          console.log(result);
-          this.router.navigate(['/']).then((result) => console.log(result));
-        },
+      const payload: LoginRequest = this.loginForm.value;
+      this.authService.apiAuthLoginPost(payload).subscribe({
+        next: () => this.router.navigate(['/']),
+        error: (err) => console.error(err),
       });
     } else {
       this.loginForm.markAllAsTouched();

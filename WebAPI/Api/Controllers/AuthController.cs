@@ -89,7 +89,7 @@ public class AuthController(
     [Authorize(Policy = "VerifiedUser")]
     [RequiresAuthCookies]
     [ProducesAuthCookies]
-    [ProducesResponseType(typeof(OperationResult<AuthStatusResponseData>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OperationResult<AuthStatusResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(OperationResult<Unit>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAuthStatus()
     {

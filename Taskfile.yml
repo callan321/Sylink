@@ -29,6 +29,12 @@ tasks:
     cmds:
       - openssl req -x509 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -days 365 -nodes -subj "/CN=localhost"
 
+  generate:api:
+    desc: Generate Angular client from OpenAPI spec
+    dir: .
+    cmds:
+      - openapi-generator-cli generate -i ./v1.json -g typescript-angular -o ClientApp/src/app/core/api-client
+
   frontend:
     desc: Run Angular frontend (watch mode)
     dir: ClientApp

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from '@core/data-access/auth.service';
+import { AuthService } from '@core/api-client/api/auth.service';
 import { getAuthPath } from '@core/constants/app.routes';
 import { IAuthenticatedUser } from '@core/interfaces/IAuthenticatedUser';
 
@@ -29,7 +29,7 @@ export class AuthStateService implements IAuthenticatedUser {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
+    this.authService.apiAuthLogoutPost().subscribe({
       next: () => {
         this.reset();
         this.router.navigate([getAuthPath('login')]);
