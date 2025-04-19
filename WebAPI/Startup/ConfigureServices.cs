@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WebAPI.Api.Filters;
 using WebAPI.Api.OpenApi;
@@ -15,6 +12,7 @@ using WebAPI.Domain.Entities;
 using WebAPI.Infrastructure.Data;
 using WebAPI.Infrastructure.Data.Repositories;
 using WebAPI.Infrastructure.Services;
+
 
 namespace WebAPI.Startup;
 
@@ -90,7 +88,7 @@ public static class ConfigureServices
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseInMemoryDatabase("AppDb");
+            options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
 
         return services;

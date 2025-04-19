@@ -4,7 +4,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>WebAPI-12345678-1234-1234-1234-123456789abc</UserSecretsId>
+		<UserSecretsId>b1d05950-2c79-4f57-84bb-e162b9346d7d</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -12,13 +12,9 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.4" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-		<PackageReference Include="Scalar.AspNetCore" Version="2.1.6" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+		<PackageReference Include="Scalar.AspNetCore" Version="2.1.16" />
 	</ItemGroup>
 
 </Project>

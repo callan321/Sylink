@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './form-error-message.component.scss',
 })
 export class FormErrorMessageComponent {
-  @Input({ required: true }) errorMessage!: string;
+  @Input({ required: true }) errorMessage!: string | null;
 }

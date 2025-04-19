@@ -14,7 +14,7 @@ public class ValidationFilter : IAsyncActionFilter
                 .Where(x => x.Value?.Errors.Count > 0)
                 .SelectMany(x => x.Value!.Errors.Select(e => new FieldError
                 {
-                    Field = Enum.TryParse<FieldName>(x.Key, true, out var parsed) ? parsed : FieldName.General,
+                    Field = Enum.TryParse<FieldName>(x.Key, true, out var parsed) ? parsed : FieldName.general,
                     Message = e.ErrorMessage
                 }))
                 .ToList();

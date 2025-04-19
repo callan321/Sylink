@@ -1,7 +1,11 @@
+<div class="pb-6">
+  <app-form-error-message [errorMessage]="errorMessage" />
+</div>
+
 <form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div>
     <app-form-input-group
-      id="email"
+      [id]="FieldName.Email"
       label="Email address"
       type="email"
       autocomplete="email"
@@ -10,7 +14,7 @@
   </div>
   <div>
     <app-form-input-group
-      id="password"
+      [id]="FieldName.Password"
       label="Password"
       type="password"
       autocomplete="current-password"

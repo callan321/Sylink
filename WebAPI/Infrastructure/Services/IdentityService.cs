@@ -28,7 +28,7 @@ public class IdentityService(
         return (result.Succeeded,
             result.Errors.Select(e => new FieldError
             {
-                Field = FieldName.General,
+                Field = FieldName.general,
                 Message = e.Description
             }));
     }

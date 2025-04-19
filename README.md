@@ -4,6 +4,48 @@ _A collaboration-first space for writing, planning, and hanging out with friends
 
 ---
 
+## 📚 Table of Contents
+
+- [ Project Architecture](#-project-architecture)
+- [⚠️ Implementation Notes](#️-implementation-notes)
+- [Phase 1: Auth Backend](#phase-1-auth-backend)
+- [Phase 2: Postgres + EF Core](#phase-2-postgres--ef-core)
+- [Phase 3: Frontend Skeleton (ClientApp)](#phase-3-frontend-skeleton-clientapp)
+- [Phase 4: Feature Modules](#phase-4-feature-modules)
+  - [4.1 Servers & Channels](#41-servers--channels)
+  - [4.2 Messaging](#42-messaging)
+  - [4.3 Notes](#43-notes)
+  - [4.4 Calendar & Schedule](#44-calendar--schedule)
+- [Phase 5: Staging Environment](#phase-5-staging-environment)
+- [Phase 6: Production Readiness](#phase-6-production-readiness)
+
+---
+
+## setup Instructions
+
+1. **Install dependencies**
+
+```
+ task setup
+```
+
+2. **Generate API client**
+   the backend will need to be running and you will need to download ... fix this later
+
+   ```
+   task generate:api
+   ```
+
+3. **Configure secrets for development**
+
+   ```
+   # Set database connection string
+   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=sylink;Username=postgres;Password=yourpassword"
+
+   # Set JWT secret key
+   dotnet user-secrets set "JwtSettings:SecurityKey" "Xv#7!Pd$3kL0%rT9mN@qWz*YfE6uJhB2"
+   ```
+
 ## Project Requirements (Dev Machine)
 
 To run **Sylink** locally (pre-Docker), install the following global tools:
@@ -112,18 +154,17 @@ The app is split into clear layers, each with its own responsibility. This makes
 - Just plain C# classes`
 - No external dependencies
 - Represents business rules and structures
-- Exception is Idenity for Application User
 
 ### `Infrastructure/` – Implementations
 
 - Connects to real systems: EF Core, JWT, email, etc.
-- Implements the interfaces defined in Application
-- Swappable and mockable
+- Implements the interfaces defined in `Application/`
 
 ### `Startup/` – App Composition
 
 - Wires everything together
 - Registers services and middleware
+- Keeps `Program.cs` minimal and focused
 
 ---
 
@@ -137,11 +178,11 @@ The app is split into clear layers, each with its own responsibility. This makes
 
 This setup aims to balance **structure and flexibility** — especially helpful when working alone but building for the long term.
 
-## Why Not Identity Directly?
+## Why Not Identity `[Authorize]`?
 
 This app uses **cookie-based JWT authentication** designed for SPA clients (e.g., Angular):
 
-- **Access Token**: Short-lived, stored in an HttpOnly cookie
+- **Access Token**: Short-lived, stored in an `HttpOnly` cookie
 - **Refresh Token**: Stored separately, tied to DB entries, and allows token renewal
 
 Because this app uses custom refresh tokens and a stateless JWT flow, Identity's built-in auth pipeline doesn't directly apply. Instead:
@@ -157,37 +198,29 @@ This gives full control over auth mechanics while keeping things simple.
 ### Phase 1: Auth Backend
 
 - [x] Setup .NET WebApi project
-- [x] Layered architecture (Domain / Application / Infrastructure)
 - [x] Register / login / logout endpoints
-- [x] Remember-me support (persistent tokens)
-- [x] Email verification before login
-- [x] Forgot password / reset password flow (token-based)
-- [x] JWT access + refresh tokens
-- [x] Refresh token rotation
-- [x] Token refresh via middleware
-- [x] Secure cookies (HttpOnly, SameSite, Secure)
-- [x] ClaimsPrincipal with user ID + email
-- [x] Auth middleware (sets HttpContext.User)
-- [x] Authorization policy for confirmed users
-- [x] Logout clears refresh token
-- [x] Request validation (attributes)
-- [x] Structured error messages and validation feedback
+- [x] JWT auth
+- [x] Email verification
+- [x] Password reset (token-based)
+- [x] Token refresh endpoint
+- [ ] Add auth middleware
+- [x] Implement email confirmed auth logic
+- [ ] Require email confirmation before allowing login - magic links
+- [ ] Implement Oauth
 
 ---
 
-### Phase 2: Frontend Skeleton
+### Phase 2: Frontend Skeleton (ClientApp)
 
 - [x] Initialize Angular project
 - [ ] Link to backend (auth flows)
 - [ ] Auth guards + routing
 - [ ] Homepage/dashboard
 - [ ] Profile editor
-- [ ] AuthService
-- [ ] JWT cookie handling (interceptors)
 
 ---
 
-### Phase 3: Postgres
+### Phase 3: Postgres + EF Core
 
 - [ ] Add `docker-compose.dev.yml` with Postgres
 - [ ] Switch to EF Core + Npgsql
@@ -280,8 +313,7 @@ This gives full control over auth mechanics while keeping things simple.
 
 **Requirements**
 
-- [ ] Enforce a stronger password policy via IdentityOptions
-- [ ] Implement Oauth
+- [ ] Enforce a stronger password policy via `IdentityOptions`
 - [ ] Lock down CORS policy for known environments
 - [ ] Rotate and secure JWT secret via environment config
 - [ ] Add background task runner
@@ -289,8 +321,7 @@ This gives full control over auth mechanics while keeping things simple.
 - [ ] Clean up expired email/password tokens
 - [ ] Revoke old refresh tokens
 - [ ] Add audit logging for auth events
-- [ ] Rate limit sensitive auth endpoints (register, login, forgot-password)
-- [ ] Global app-level rate limiting (IP-based)
+- [ ] Rate limit auth endpoints
 
 **Wants**
 

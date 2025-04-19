@@ -1,5 +1,6 @@
 <div [formGroup]="formGroup">
   <label [for]="id" class="form-label">{{ label }}</label>
+
   <div class="mt-2">
     <input
       [id]="id"
@@ -8,11 +9,15 @@
       [autocomplete]="autocomplete"
       [required]="required"
       class="form-input"
+      [class.border-red-500]="errorMessages.length"
     />
   </div>
+
+  @if (errorMessages.length > 0) {
     <div class="text-red-600 text-sm mt-1">
-      @for (error of fieldErrors; track $index) {
+      @for (error of errorMessages; track $index) {
         <div>{{ error }}</div>
       }
     </div>
+  }
 </div>

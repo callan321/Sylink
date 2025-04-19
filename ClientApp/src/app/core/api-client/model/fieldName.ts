@@ -9,16 +9,16 @@
  */
 
 
-export type FieldName = 'Email' | 'Password' | 'DisplayName' | 'General';
+export type FieldName = 'email' | 'password' | 'displayName' | 'general';
 
 export const FieldName = {
 
-    Email: 'Email' as FieldName,
+    Email: 'email' as FieldName,
 
-    Password: 'Password' as FieldName,
+    Password: 'password' as FieldName,
 
-    DisplayName: 'DisplayName' as FieldName,
+    DisplayName: 'displayName' as FieldName,
 
-    General: 'General' as FieldName
+    General: 'general' as FieldName
 };
 

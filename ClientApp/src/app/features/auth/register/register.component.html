@@ -4,31 +4,30 @@
 <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div>
     <app-form-input-group
-      id="email"
+      [id]="FieldName.Email"
       label="Email address"
       type="email"
       autocomplete="email"
       required
-      [fieldErrors]="fieldErrors['Email']"
     />
   </div>
   <div>
     <app-form-input-group
-      id="password"
+      [id]="FieldName.Password"
       label="Password"
       type="password"
       autocomplete="current-password"
       required
-      [fieldErrors]="fieldErrors['Password']"
+
     />
   </div>
   <div>
     <app-form-input-group
-      id="displayName"
+      [id]="FieldName.DisplayName"
       label="Display Name"
       type="text"
       required
-      [fieldErrors]="fieldErrors['DisplayName']"
+
     />
   </div>
   <app-form-submit-button
@@ -44,6 +43,6 @@
 </div>
 <p class="mt-10 text-center text-sm/6 text-gray-500">
   Already have an account?
-  <a [routerLink]="[AppRoutes.auth.login]" class="button-text">Login Here</a>
+  <a [routerLink]="[getAuthPath('login')]" class="button-text">Login Here</a>
 </p>
 

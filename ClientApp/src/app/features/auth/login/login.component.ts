@@ -1,12 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService, LoginRequest } from '@core/api-client';
+import { AuthService, FieldName, LoginRequest } from '@core/api-client';
+import { AbstractFormComponent } from '@shared/form/abstract-form.component';
 import { AuthButtonComponent } from '@shared/components/auth-button/auth-button.component';
 import { FormCheckboxComponent } from '@shared/components/form-checkbox/form-checkbox.component';
 import { TextDividerComponent } from '@shared/components/text-divider/text-divider.component';
 import { FormInputGroupComponent } from '@shared/components/form-input-group/form-input-group.component';
 import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
+import {FormErrorMessageComponent} from '@shared/components/form-error-message/form-error-message.component';
+
 
 @Component({
   selector: 'app-login',
@@ -21,31 +24,38 @@ import { AppRoutes, getAuthPath } from '@core/constants/app.routes';
     ReactiveFormsModule,
     RouterLink,
     FormInputGroupComponent,
+    FormErrorMessageComponent,
   ],
 })
-export class LoginComponent {
+export class LoginComponent extends AbstractFormComponent<LoginRequest> {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   loginForm: FormGroup = this.formBuilder.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required],
-    rememberMe: [false],
+    email: '',
+    password: '',
+    rememberMe: false,
   });
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      const payload: LoginRequest = this.loginForm.value;
-      this.authService.apiAuthLoginPost(payload).subscribe({
-        next: () => this.router.navigate(['/']),
-        error: (err) => console.error(err),
-      });
-    } else {
-      this.loginForm.markAllAsTouched();
-    }
+
+  override getForm(): FormGroup {
+    return this.loginForm;
+  }
+
+  override buildPayload(): LoginRequest {
+    return this.loginForm.getRawValue();
+  }
+
+  override onSubmitSuccess(): void {
+    this.router.navigate(['/']);
+  }
+
+  onSubmit(): void {
+    this.submitForm(payload => this.authService.apiAuthLoginPost(payload));
   }
 
   protected readonly AppRoutes = AppRoutes;
   protected readonly getAuthPath = getAuthPath;
+  protected readonly FieldName = FieldName;
 }

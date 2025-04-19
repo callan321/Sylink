@@ -1,24 +1,46 @@
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { getFormErrors } from './form-error.utils';
+import { inject } from '@angular/core';
+import { ExtractedErrors, ApiErrorService } from '@core/services/api-error.service';
+import { OperationResultOfUnit } from '@core/api-client/model/models';
+
 
 export abstract class AbstractFormComponent<PayloadType = any> {
-  protected fieldErrors: Record<string, string[]> = {};
-  protected errorMessage: string = '';
+  private readonly apiErrorService = inject(ApiErrorService);
   private isSubmitting = false;
+
+  protected extractedErrors: ExtractedErrors = this.apiErrorService.emptyErrors();
 
   protected abstract getForm(): FormGroup;
   protected abstract buildPayload(): PayloadType;
   protected abstract onSubmitSuccess<T>(response: T): void;
 
+  /**
+   * Public getter to use in templates to disable buttons when submitting.
+   */
   public getButtonDisabled(): boolean {
     return this.isSubmitting;
   }
 
+  /**
+   * Public getter to show a general error message above the form.
+   */
+  public get errorMessage(): string | null {
+    return (
+      this.extractedErrors.message ||
+      this.extractedErrors.generalErrors.join(', ') ||
+      null
+    );
+  }
+
+  /**
+   * Submits a form with the given API request function.
+   */
   protected submitForm<T>(
     requestFn: (payload: PayloadType) => Observable<T>,
   ): void {
     const form = this.getForm();
+
     if (!this.isSubmitting) {
       this.isSubmitting = true;
       const payload = this.buildPayload();
@@ -31,9 +53,11 @@ export abstract class AbstractFormComponent<PayloadType = any> {
         },
         error: (err) => {
           this.isSubmitting = false;
-          const { fieldErrors, errorMessage } = getFormErrors(err);
-          this.fieldErrors = fieldErrors;
-          this.errorMessage = errorMessage;
+
+          const response: OperationResultOfUnit = err.error;
+          this.extractedErrors = this.apiErrorService.extract(response);
+          console.log("abstract form component", this.extractedErrors );
+          this.apiErrorService.applyToFormGroup(form, this.extractedErrors);
         },
       });
     } else {
@@ -41,8 +65,10 @@ export abstract class AbstractFormComponent<PayloadType = any> {
     }
   }
 
+  /**
+   * Clears any stored error messages.
+   */
   protected resetErrors(): void {
-    this.fieldErrors = {};
-    this.errorMessage = '';
+    this.extractedErrors = this.apiErrorService.emptyErrors();
   }
 }

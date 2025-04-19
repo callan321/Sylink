@@ -5,6 +5,7 @@ using WebAPI.Startup;
 var builder = WebApplication.CreateBuilder(args);
 
 // Register application services
+builder.Configuration.AddUserSecrets<Program>(true);
 builder.Services.AddAppServices(builder.Configuration);
 
 var app = builder.Build();
